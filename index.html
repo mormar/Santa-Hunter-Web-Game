@@ -4,13 +4,36 @@
 	<meta charset="UTF-8"/>
 	<title>Santa Hunter</title>
 	<!-- include phaser lib --> 
-	<script src="phaser.min.js"></script>
-	<!-- include play scriptp-->     
-    <script src="play.js"></script>
-    <!-- include game script -->  
-    <script src="game.js"></script>
+	<script type="text/javascript" src="phaser.min.js"></script>
+	<style type="text/css">
+		body{
+			margin: 50px;
+		}
+	</style>
 </head>
-<body>
+<body> 
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(1024, 768, Phaser.AUTO, '', { preload: preload,
+	create: create, update: update });
+
+function preload() {
+	game.load.image('background','assets/ForestNight.png');
+	game.load.image('player','assets/ballSmall.png');
+	game.load.image('blockOfGround','assets/surface8.png');
+
+}
+function create() {
+	//background
+	game.add.sprite(0, 0, 'background');
+}
+function update() {
+}
+//function collect(){
+//
+//}
+</script>
 
 </body>
 </html>
