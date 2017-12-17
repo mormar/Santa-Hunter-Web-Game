@@ -29,6 +29,7 @@ function preload() {
 var cursors;
 var spritePlayer;
 var jumpButton;
+var jumpTimer = 0;
 
 function create() {
 
@@ -43,7 +44,7 @@ function create() {
       spriteBackground.scale.y = 0.72;
 	
 	// player
-	spritePlayer = game.add.sprite(32, game.world.height - 300, 'player');
+	spritePlayer = game.add.sprite(32, game.world.height - 100, 'player');
 	// Scale sprite player
 	spritePlayer.scale.x = 0.1;
 	spritePlayer.scale.y = 0.1;
@@ -53,7 +54,7 @@ function create() {
     
     // Player physics properties.
     spritePlayer.body.bounce.y = 0.2;
-    spritePlayer.body.gravity.y = 300;
+    spritePlayer.body.gravity.y = 75;
     spritePlayer.body.maxVelocity.y = 150;
     spritePlayer.body.collideWorldBounds = true; 
 
@@ -62,23 +63,29 @@ function create() {
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 function update() {
+	
 	//Prevents ball from moving
 	spritePlayer.body.velocity.x = 0;
 	
-	//checks for right arrowkey
+	//checks for right arrow key
 	if(cursors.right.isDown){
 
         spritePlayer.body.velocity.x = 150;
 	} 
-	//checks for left arrowkey
+	//checks for left arrow key
 	else if(cursors.left.isDown){
 
         spritePlayer.body.velocity.x = -150;	
 	}
+	//jump for arrow key up
+	if(cursors.up.isDown && spritePlayer.body.onFloor() && game.time.now > jumpTimer){
+		spritePlayer.body.velocity.y = -250;
+		jumpTimer = game.time.now + 750;
+	}
 }
 
 function render () {
-
+	//game.debug.text(game.time.suggestedFps, 32, 32);
     
 }
 //function collect(){
