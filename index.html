@@ -31,6 +31,9 @@ var cursors;
 var spritePlayer;
 var jumpButton;
 var jumpTimer = 0;
+var gifts;
+var score = 0;
+var scoreText;
 
 function create() {
 
@@ -50,7 +53,7 @@ function create() {
 	//  The platforms group 
     platforms = game.add.group();
 
-    //  We will enable physics for any object that is created in this group
+    //  Enable physics for blockOfGrounds
     platforms.enableBody = true;
 
 	var spriteBlockOfGround = platforms.create(0, 720, 'blockOfGround');
@@ -239,6 +242,32 @@ function create() {
 	spriteBlockOfGround42.scale.x = 0.25;
 	spriteBlockOfGround42.scale.y = 0.25;
 
+	// Add gift for collect
+	gifts = game.add.group();
+	
+	// enable physics for gifts
+	gifts.enableBody = true;
+
+	var spriteGift = gifts.create(100, 500, 'gift'); 
+	spriteGift.body.gravity.y = 300;
+	var spriteGift1 = gifts.create(470, 650, 'gift'); 
+	spriteGift1.body.gravity.y = 300;
+	var spriteGift2 = gifts.create(160, 100, 'gift'); 
+	spriteGift2.body.gravity.y = 300;
+	var spriteGift3 = gifts.create(10, 100, 'gift'); 
+	spriteGift3.body.gravity.y = 300;
+	var spriteGift4 = gifts.create(970, 50, 'gift'); 
+	spriteGift4.body.gravity.y = 300;
+	var spriteGift5 = gifts.create(990, 500, 'gift'); 
+	spriteGift5.body.gravity.y = 300;
+	var spriteGift6 = gifts.create(460, 100, 'gift'); 
+	spriteGift6.body.gravity.y = 300;
+	var spriteGift7 = gifts.create(800, 100, 'gift'); 
+	spriteGift7.body.gravity.y = 300;
+	var spriteGift8 = gifts.create(900, 300, 'gift'); 
+	spriteGift8.body.gravity.y = 300;
+	var spriteGift9 = gifts.create(650, 500, 'gift'); 
+	spriteGift9.body.gravity.y = 300;
 
 	// Enable physics on the player
     game.physics.enable(spritePlayer, Phaser.Physics.ARCADE);
@@ -253,6 +282,8 @@ function create() {
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	
+	//  The score
+    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#f00' });
 	}
 	
 function update() {
@@ -277,6 +308,9 @@ function update() {
 	}
 	
 	game.physics.arcade.collide(spritePlayer, platforms);
+	game.physics.arcade.collide(gifts, platforms);
+
+	game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
 
 }
 
@@ -284,9 +318,14 @@ function render () {
 	//game.debug.text(game.time.suggestedFps, 32, 32);
     
 }
-//function collect(){
-//
-//}
+function collectGift (spritePlayer, spriteGift){
+	
+	spriteGift.kill();
+
+	score +=10;
+	scoreText.text = 'Score: ' + score;
+
+}
 
 </script>
 
