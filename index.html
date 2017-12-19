@@ -20,9 +20,10 @@ var game = new Phaser.Game(1024, 768, Phaser.AUTO, '', { preload: preload,
 
 function preload() {
 	game.load.image('background','assets/ForestNight.png');
-	game.load.image('player','assets/ball.png');
 	game.load.image('blockOfGround','assets/surface8.png');
-
+	game.load.image('player','assets/Player.png');
+	game.load.image('spike','assets/Spike.png');
+	game.load.image('gift','assets/Gift.png');
 	
 }
 //Global vars
@@ -45,9 +46,199 @@ function create() {
 	
 	// player
 	spritePlayer = game.add.sprite(32, game.world.height - 100, 'player');
-	// Scale sprite player
-	spritePlayer.scale.x = 0.1;
-	spritePlayer.scale.y = 0.1;
+	
+	//  The platforms group 
+    platforms = game.add.group();
+
+    //  We will enable physics for any object that is created in this group
+    platforms.enableBody = true;
+
+	var spriteBlockOfGround = platforms.create(0, 720, 'blockOfGround');
+	spriteBlockOfGround.body.immovable = true;
+	spriteBlockOfGround.scale.x = 0.25;
+	spriteBlockOfGround.scale.y = 0.25;
+	var spriteBlockOfGround1 = platforms.create(50, 720, 'blockOfGround');
+	spriteBlockOfGround1.body.immovable = true;
+	spriteBlockOfGround1.scale.x = 0.25;
+	spriteBlockOfGround1.scale.y = 0.25;
+	var spriteBlockOfGround2 = platforms.create(100, 720, 'blockOfGround');
+	spriteBlockOfGround2.body.immovable = true;
+	spriteBlockOfGround2.scale.x = 0.25;
+	spriteBlockOfGround2.scale.y = 0.25;
+	var spriteBlockOfGround3 = platforms.create(150, 720, 'blockOfGround');
+	spriteBlockOfGround3.body.immovable = true;
+	spriteBlockOfGround3.scale.x = 0.25;
+	spriteBlockOfGround3.scale.y = 0.25;
+	var spriteBlockOfGround4 = platforms.create(200, 720, 'blockOfGround');
+	spriteBlockOfGround4.body.immovable = true;
+	spriteBlockOfGround4.scale.x = 0.25;
+	spriteBlockOfGround4.scale.y = 0.25;
+	var spriteBlockOfGround5 = platforms.create(250, 720, 'blockOfGround');
+	spriteBlockOfGround5.body.immovable = true;
+	spriteBlockOfGround5.scale.x = 0.25;
+	spriteBlockOfGround5.scale.y = 0.25;
+	var spriteBlockOfGround6 = platforms.create(300, 720, 'blockOfGround');
+	spriteBlockOfGround6.body.immovable = true;
+	spriteBlockOfGround6.scale.x = 0.25;
+	spriteBlockOfGround6.scale.y = 0.25;
+	var spriteBlockOfGround7 = platforms.create(350, 720, 'blockOfGround');
+	spriteBlockOfGround7.body.immovable = true;
+	spriteBlockOfGround7.scale.x = 0.25;
+	spriteBlockOfGround7.scale.y = 0.25;
+	var spriteBlockOfGround8 = platforms.create(400, 720, 'blockOfGround');
+	spriteBlockOfGround8.body.immovable = true;
+	spriteBlockOfGround8.scale.x = 0.25;
+	spriteBlockOfGround8.scale.y = 0.25;
+	var spriteBlockOfGround9 = platforms.create(450, 720, 'blockOfGround');
+	spriteBlockOfGround9.body.immovable = true;
+	spriteBlockOfGround9.scale.x = 0.25;
+	spriteBlockOfGround9.scale.y = 0.25;
+	var spriteBlockOfGround10 = platforms.create(500, 720, 'blockOfGround');
+	spriteBlockOfGround10.body.immovable = true;
+	spriteBlockOfGround10.scale.x = 0.25;
+	spriteBlockOfGround10.scale.y = 0.25;
+	var spriteBlockOfGround11 = platforms.create(550, 720, 'blockOfGround');
+	spriteBlockOfGround11.body.immovable = true;
+	spriteBlockOfGround11.scale.x = 0.25;
+	spriteBlockOfGround11.scale.y = 0.25;
+	var spriteBlockOfGround12 = platforms.create(600, 720, 'blockOfGround');
+	spriteBlockOfGround12.body.immovable = true;
+	spriteBlockOfGround12.scale.x = 0.25;
+	spriteBlockOfGround12.scale.y = 0.25;
+	var spriteBlockOfGround13 = platforms.create(650, 720, 'blockOfGround');
+	spriteBlockOfGround13.body.immovable = true;
+	spriteBlockOfGround13.scale.x = 0.25;
+	spriteBlockOfGround13.scale.y = 0.25;
+	var spriteBlockOfGround14 = platforms.create(700, 720, 'blockOfGround');
+	spriteBlockOfGround14.body.immovable = true;
+	spriteBlockOfGround14.scale.x = 0.25;
+	spriteBlockOfGround14.scale.y = 0.25;
+	var spriteBlockOfGround15 = platforms.create(750, 720, 'blockOfGround');
+	spriteBlockOfGround15.body.immovable = true;
+	spriteBlockOfGround15.scale.x = 0.25;
+	spriteBlockOfGround15.scale.y = 0.25;
+	var spriteBlockOfGround16 = platforms.create(800, 720, 'blockOfGround');
+	spriteBlockOfGround16.body.immovable = true;
+	spriteBlockOfGround16.scale.x = 0.25;
+	spriteBlockOfGround16.scale.y = 0.25;
+	var spriteBlockOfGround17 = platforms.create(850, 720, 'blockOfGround');
+	spriteBlockOfGround17.body.immovable = true;
+	spriteBlockOfGround17.scale.x = 0.25;
+	spriteBlockOfGround17.scale.y = 0.25;
+	var spriteBlockOfGround18 = platforms.create(900, 720, 'blockOfGround');
+	spriteBlockOfGround18.body.immovable = true;
+	spriteBlockOfGround18.scale.x = 0.25;
+	spriteBlockOfGround18.scale.y = 0.25;
+	var spriteBlockOfGround19 = platforms.create(950, 720, 'blockOfGround');
+	spriteBlockOfGround19.body.immovable = true;
+	spriteBlockOfGround19.scale.x = 0.25;
+	spriteBlockOfGround19.scale.y = 0.25;
+	var spriteBlockOfGround20 = platforms.create(1000, 720, 'blockOfGround');
+	spriteBlockOfGround20.body.immovable = true;
+	spriteBlockOfGround20.scale.x = 0.25;
+	spriteBlockOfGround20.scale.y = 0.25;
+
+	var spriteBlockOfGround21 = platforms.create(250, 570, 'blockOfGround');
+	spriteBlockOfGround21.body.immovable = true;
+	spriteBlockOfGround21.scale.x = 0.25;
+	spriteBlockOfGround21.scale.y = 0.25;
+	var spriteBlockOfGround22 = platforms.create(300, 570, 'blockOfGround');
+	spriteBlockOfGround22.body.immovable = true;
+	spriteBlockOfGround22.scale.x = 0.25;
+	spriteBlockOfGround22.scale.y = 0.25;
+	var spriteBlockOfGround23 = platforms.create(350, 570, 'blockOfGround');
+	spriteBlockOfGround23.body.immovable = true;
+	spriteBlockOfGround23.scale.x = 0.25;
+	spriteBlockOfGround23.scale.y = 0.25;
+	var spriteBlockOfGround24 = platforms.create(400, 570, 'blockOfGround');
+	spriteBlockOfGround24.body.immovable = true;
+	spriteBlockOfGround24.scale.x = 0.25;
+	spriteBlockOfGround24.scale.y = 0.25;
+
+	var spriteBlockOfGround25 = platforms.create(150, 430, 'blockOfGround');
+	spriteBlockOfGround25.body.immovable = true;
+	spriteBlockOfGround25.scale.x = 0.25;
+	spriteBlockOfGround25.scale.y = 0.25;
+
+	var spriteBlockOfGround26 = platforms.create(100, 300, 'blockOfGround');
+	spriteBlockOfGround26.body.immovable = true;
+	spriteBlockOfGround26.scale.x = 0.25;
+	spriteBlockOfGround26.scale.y = 0.25;
+	var spriteBlockOfGround27 = platforms.create(50, 300, 'blockOfGround');
+	spriteBlockOfGround27.body.immovable = true;
+	spriteBlockOfGround27.scale.x = 0.25;
+	spriteBlockOfGround27.scale.y = 0.25;
+	var spriteBlockOfGround28 = platforms.create(0, 300, 'blockOfGround');
+	spriteBlockOfGround28.body.immovable = true;
+	spriteBlockOfGround28.scale.x = 0.25;
+	spriteBlockOfGround28.scale.y = 0.25;
+
+	var spriteBlockOfGround29 = platforms.create(250, 200, 'blockOfGround');
+	spriteBlockOfGround29.body.immovable = true;
+	spriteBlockOfGround29.scale.x = 0.25;
+	spriteBlockOfGround29.scale.y = 0.25;
+	var spriteBlockOfGround30 = platforms.create(450, 200, 'blockOfGround');
+	spriteBlockOfGround30.body.immovable = true;
+	spriteBlockOfGround30.scale.x = 0.25;
+	spriteBlockOfGround30.scale.y = 0.25;
+	var spriteBlockOfGround31 = platforms.create(650, 200, 'blockOfGround');
+	spriteBlockOfGround31.body.immovable = true;
+	spriteBlockOfGround31.scale.x = 0.25;
+	spriteBlockOfGround31.scale.y = 0.25;
+
+	var spriteBlockOfGround32 = platforms.create(800, 100, 'blockOfGround');
+	spriteBlockOfGround32.body.immovable = true;
+	spriteBlockOfGround32.scale.x = 0.25;
+	spriteBlockOfGround32.scale.y = 0.25;
+	var spriteBlockOfGround33 = platforms.create(950, 100, 'blockOfGround');
+	spriteBlockOfGround33.body.immovable = true;
+	spriteBlockOfGround33.scale.x = 0.25;
+	spriteBlockOfGround33.scale.y = 0.25;
+	var spriteBlockOfGround34 = platforms.create(1000, 100, 'blockOfGround');
+	spriteBlockOfGround34.body.immovable = true;
+	spriteBlockOfGround34.scale.x = 0.25;
+	spriteBlockOfGround34.scale.y = 0.25;
+
+	var spriteBlockOfGround35 = platforms.create(1000, 500, 'blockOfGround');
+	spriteBlockOfGround35.body.immovable = true;
+	spriteBlockOfGround35.scale.x = 0.25;
+	spriteBlockOfGround35.scale.y = 0.25;
+	var spriteBlockOfGround36 = platforms.create(950, 500, 'blockOfGround');
+	spriteBlockOfGround36.body.immovable = true;
+	spriteBlockOfGround36.scale.x = 0.25;
+	spriteBlockOfGround36.scale.y = 0.25;
+	var spriteBlockOfGround37 = platforms.create(900, 500, 'blockOfGround');
+	spriteBlockOfGround37.body.immovable = true;
+	spriteBlockOfGround37.scale.x = 0.25;
+	spriteBlockOfGround37.scale.y = 0.25;
+
+	var spriteBlockOfGround37 = platforms.create(500, 670, 'blockOfGround');
+	spriteBlockOfGround37.body.immovable = true;
+	spriteBlockOfGround37.scale.x = 0.25;
+	spriteBlockOfGround37.scale.y = 0.25;
+	var spriteBlockOfGround38 = platforms.create(450, 620, 'blockOfGround');
+	spriteBlockOfGround38.body.immovable = true;
+	spriteBlockOfGround38.scale.x = 0.25;
+	spriteBlockOfGround38.scale.y = 0.25;
+
+	var spriteBlockOfGround39 = platforms.create(650, 570, 'blockOfGround');
+	spriteBlockOfGround39.body.immovable = true;
+	spriteBlockOfGround39.scale.x = 0.25;
+	spriteBlockOfGround39.scale.y = 0.25;
+	var spriteBlockOfGround40 = platforms.create(800, 570, 'blockOfGround');
+	spriteBlockOfGround40.body.immovable = true;
+	spriteBlockOfGround40.scale.x = 0.25;
+	spriteBlockOfGround40.scale.y = 0.25;
+	var spriteBlockOfGround41 = platforms.create(800, 370, 'blockOfGround');
+	spriteBlockOfGround41.body.immovable = true;
+	spriteBlockOfGround41.scale.x = 0.25;
+	spriteBlockOfGround41.scale.y = 0.25;
+
+	var spriteBlockOfGround42 = platforms.create(980, 670, 'blockOfGround');
+	spriteBlockOfGround42.body.immovable = true;
+	spriteBlockOfGround42.scale.x = 0.25;
+	spriteBlockOfGround42.scale.y = 0.25;
+
 
 	// Enable physics on the player
     game.physics.enable(spritePlayer, Phaser.Physics.ARCADE);
@@ -61,7 +252,9 @@ function create() {
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-}
+	
+	}
+	
 function update() {
 	
 	//Prevents ball from moving
@@ -78,10 +271,13 @@ function update() {
         spritePlayer.body.velocity.x = -150;	
 	}
 	//jump for arrow key up
-	if(cursors.up.isDown && spritePlayer.body.onFloor() && game.time.now > jumpTimer){
+	if(cursors.up.isDown){
 		spritePlayer.body.velocity.y = -250;
 		jumpTimer = game.time.now + 750;
 	}
+	
+	game.physics.arcade.collide(spritePlayer, platforms);
+
 }
 
 function render () {
@@ -91,6 +287,7 @@ function render () {
 //function collect(){
 //
 //}
+
 </script>
 
 </body>
