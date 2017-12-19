@@ -24,9 +24,12 @@ function preload() {
 	game.load.image('player','assets/PlayerBeard.png');
 	game.load.image('spike','assets/Spike.png');
 	game.load.image('gift','assets/Gift1.png');
+	game.load.image('win','assets/Thanks.png');
+	game.load.image('lose','assets/Try.png')
 
 	game.load.audio('music','sounds/Jingle.mp3')
 	game.load.audio('hoho','sounds/CollectSound.mp3')
+	game.load.audio('death','sounds/DeathSound.mp3')
 	
 }
 //Global vars
@@ -37,6 +40,8 @@ var jumpTimer = 0;
 var gifts;
 var score = 0;
 var scoreText;
+var lifeText;
+var life = 3;
 
 
 function create() {
@@ -276,6 +281,132 @@ function create() {
 	var spriteGift9 = gifts.create(650, 500, 'gift'); 
 	spriteGift9.body.gravity.y = 300;
 
+	// Add spike
+	spikes = game.add.group();
+	// Enable physics for spikes
+	spikes.enableBody = true;
+
+	var spike1 = spikes.create(535, 688, 'spike');
+	spike1.body.immovable = true;
+	spike1.scale.x = 1.5;
+	spike1.scale.y = 1.5;
+	var spike2 = spikes.create(550, 688, 'spike');
+	spike2.body.immovable = true;
+	spike2.scale.x = 1.5;
+	spike2.scale.y = 1.5; 
+	var spike3 = spikes.create(565, 688, 'spike');
+	spike3.body.immovable = true;
+	spike3.scale.x = 1.5;
+	spike3.scale.y = 1.5;
+	var spike4 = spikes.create(580, 688, 'spike');
+	spike4.body.immovable = true;
+	spike4.scale.x = 1.5;
+	spike4.scale.y = 1.5;  
+	var spike5 = spikes.create(595, 688, 'spike');
+	spike5.body.immovable = true;
+	spike5.scale.x = 1.5;
+	spike5.scale.y = 1.5;  
+	var spike6 = spikes.create(610, 688, 'spike');
+	spike6.body.immovable = true;
+	spike6.scale.x = 1.5;
+	spike6.scale.y = 1.5;  
+	var spike7 = spikes.create(625, 688, 'spike');
+	spike7.body.immovable = true;
+	spike7.scale.x = 1.5;
+	spike7.scale.y = 1.5;  
+	var spike8 = spikes.create(640, 688, 'spike');
+	spike8.body.immovable = true;
+	spike8.scale.x = 1.5;
+	spike8.scale.y = 1.5;  
+	var spike9 = spikes.create(655, 688, 'spike');
+	spike9.body.immovable = true;
+	spike9.scale.x = 1.5;
+	spike9.scale.y = 1.5;  
+	var spike10 = spikes.create(670, 688, 'spike');
+	spike10.body.immovable = true;
+	spike10.scale.x = 1.5;
+	spike10.scale.y = 1.5;  
+	var spike11 = spikes.create(685, 688, 'spike');
+	spike11.body.immovable = true;
+	spike11.scale.x = 1.5;
+	spike11.scale.y = 1.5;  
+	var spike12 = spikes.create(700, 688, 'spike');
+	spike12.body.immovable = true;
+	spike12.scale.x = 1.5;
+	spike12.scale.y = 1.5;  
+	var spike13 = spikes.create(715, 688, 'spike');
+	spike13.body.immovable = true;
+	spike13.scale.x = 1.5;
+	spike13.scale.y = 1.5;  
+	var spike14 = spikes.create(730, 688, 'spike');
+	spike14.body.immovable = true;
+	spike14.scale.x = 1.5;
+	spike14.scale.y = 1.5;  
+	var spike15 = spikes.create(745, 688, 'spike');
+	spike15.body.immovable = true;
+	spike15.scale.x = 1.5;
+	spike15.scale.y = 1.5;  
+	var spike16 = spikes.create(760, 688, 'spike');
+	spike16.body.immovable = true;
+	spike16.scale.x = 1.5;
+	spike16.scale.y = 1.5;  
+	var spike17 = spikes.create(775, 688, 'spike');
+	spike17.body.immovable = true;
+	spike17.scale.x = 1.5;
+	spike17.scale.y = 1.5;  
+	var spike18 = spikes.create(790, 688, 'spike');
+	spike18.body.immovable = true;
+	spike18.scale.x = 1.5;
+	spike18.scale.y = 1.5;  
+	var spike19 = spikes.create(805, 688, 'spike');
+	spike19.body.immovable = true;
+	spike19.scale.x = 1.5;
+	spike19.scale.y = 1.5;  
+	var spike20 = spikes.create(820, 688, 'spike');
+	spike20.body.immovable = true;
+	spike20.scale.x = 1.5;
+	spike20.scale.y = 1.5;  
+	var spike21 = spikes.create(835, 688, 'spike');
+	spike21.body.immovable = true;
+	spike21.scale.x = 1.5;
+	spike21.scale.y = 1.5;  
+	var spike22 = spikes.create(850, 688, 'spike');
+	spike22.body.immovable = true;
+	spike22.scale.x = 1.5;
+	spike22.scale.y = 1.5;  
+	var spike23 = spikes.create(865, 688, 'spike');
+	spike23.body.immovable = true;
+	spike23.scale.x = 1.5;
+	spike23.scale.y = 1.5;  
+	var spike24 = spikes.create(880, 688, 'spike');
+	spike24.body.immovable = true;
+	spike24.scale.x = 1.5;
+	spike24.scale.y = 1.5;  
+	var spike25 = spikes.create(895, 688, 'spike');
+	spike25.body.immovable = true;
+	spike25.scale.x = 1.5;
+	spike25.scale.y = 1.5;
+	var spike26 = spikes.create(910, 688, 'spike');
+	spike26.body.immovable = true;
+	spike26.scale.x = 1.5;
+	spike26.scale.y = 1.5;
+	var spike27 = spikes.create(925, 688, 'spike');
+	spike27.body.immovable = true;
+	spike27.scale.x = 1.5;
+	spike27.scale.y = 1.5;
+	var spike28 = spikes.create(940, 688, 'spike');
+	spike28.body.immovable = true;
+	spike28.scale.x = 1.5;
+	spike28.scale.y = 1.5;
+	var spike29 = spikes.create(955, 688, 'spike');
+	spike29.body.immovable = true;
+	spike29.scale.x = 1.5;
+	spike29.scale.y = 1.5;
+	var spike29 = spikes.create(150, 688, 'spike');
+	spike29.body.immovable = true;
+	spike29.scale.x = 1.5;
+	spike29.scale.y = 1.5;      
+
 	// Enable physics on the player
     game.physics.enable(spritePlayer, Phaser.Physics.ARCADE);
     
@@ -291,6 +422,7 @@ function create() {
 	
 	//  The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#f00' });
+    lifeText = game.add.text(16, 64, 'life: 3', { fontSize: '32px', fill: '#f00' });
 	}
 	
 function update() {
@@ -314,10 +446,16 @@ function update() {
 		jumpTimer = game.time.now + 750;
 	}
 
+	if(life == 0){
+		var lose = game.add.sprite(450, 250, 'lose');
+		spritePlayer.kill();
+	}
+
 	game.physics.arcade.collide(spritePlayer, platforms);
 	game.physics.arcade.collide(gifts, platforms);
 
 	game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
+	game.physics.arcade.overlap(spritePlayer, spikes, killPlayer, null, this);
 
 }
 
@@ -334,6 +472,22 @@ function collectGift (spritePlayer, spriteGift){
 	music = game.add.audio('hoho');
 	music.play();
 
+	
+
+}
+
+function killPlayer (spritePlayer,spike){
+	
+	spritePlayer.kill();
+	music = game.add.audio('death');
+	music.play();
+	life -=1;
+	lifeText.text = 'Life: ' + life;
+	spritePlayer.reset(32, game.world.height - 100);
+	
+
+
+	
 }
 
 </script>
