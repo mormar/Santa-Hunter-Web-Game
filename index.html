@@ -15,7 +15,7 @@
 
 <script type="text/javascript">
 
-var game = new Phaser.Game(1024, 768, Phaser.AUTO, '', { preload: preload,
+var game = new Phaser.Game(1020, 765, Phaser.AUTO, '', { preload: preload,
 	create: create, update: update, render: render  });
 
 function preload() {
@@ -30,6 +30,9 @@ function preload() {
 	game.load.audio('music','assets/sounds/Jingle.mp3')
 	game.load.audio('hoho','assets/sounds/CollectSound.mp3')
 	game.load.audio('death','assets/sounds/DeathSound.mp3')
+
+	game.load.tilemap('tilemap', 'assets/level1.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.image('tiles', 'assets/tile1.png');
 	
 }
 //Global vars
@@ -42,218 +45,38 @@ var score = 0;
 var scoreText;
 var lifeText;
 var life = 3;
+var map;
+var layer;
+var spriteBackground; 
 
 
 function create() {
 
-	music = game.add.audio('music');
-	music.play();
+	//music = game.add.audio('music');
+	//music.play();
 
 	// Add physics Arcade Physics system
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	
 	// Background
-	var spriteBackground = game.add.sprite(0, 0, 'background');
+	spriteBackground = game.add.sprite(0, 0, 'background');
 
     // Scale sprite background
       spriteBackground.scale.x = 0.55;
       spriteBackground.scale.y = 0.72;
 	
+	// Add map
+	//game.stage.backgroundColor = '#a9f0ff';
+	map = game.add.tilemap('tilemap');
+	map.addTilesetImage('santaset','tiles');
+	layer = map.createLayer('Layer1');
+	map.setCollision(1);
+	layer.resizeWorld();
+	
+	
 	// Player
 	spritePlayer = game.add.sprite(32, game.world.height - 100, 'player');
-	
-	//  The platforms group 
-    platforms = game.add.group();
-
-    //  Enable physics for blockOfGrounds
-    platforms.enableBody = true;
-
-	var spriteBlockOfGround = platforms.create(0, 720, 'blockOfGround');
-	spriteBlockOfGround.body.immovable = true;
-	spriteBlockOfGround.scale.x = 0.25;
-	spriteBlockOfGround.scale.y = 0.25;
-	var spriteBlockOfGround1 = platforms.create(50, 720, 'blockOfGround');
-	spriteBlockOfGround1.body.immovable = true;
-	spriteBlockOfGround1.scale.x = 0.25;
-	spriteBlockOfGround1.scale.y = 0.25;
-	var spriteBlockOfGround2 = platforms.create(100, 720, 'blockOfGround');
-	spriteBlockOfGround2.body.immovable = true;
-	spriteBlockOfGround2.scale.x = 0.25;
-	spriteBlockOfGround2.scale.y = 0.25;
-	var spriteBlockOfGround3 = platforms.create(150, 720, 'blockOfGround');
-	spriteBlockOfGround3.body.immovable = true;
-	spriteBlockOfGround3.scale.x = 0.25;
-	spriteBlockOfGround3.scale.y = 0.25;
-	var spriteBlockOfGround4 = platforms.create(200, 720, 'blockOfGround');
-	spriteBlockOfGround4.body.immovable = true;
-	spriteBlockOfGround4.scale.x = 0.25;
-	spriteBlockOfGround4.scale.y = 0.25;
-	var spriteBlockOfGround5 = platforms.create(250, 720, 'blockOfGround');
-	spriteBlockOfGround5.body.immovable = true;
-	spriteBlockOfGround5.scale.x = 0.25;
-	spriteBlockOfGround5.scale.y = 0.25;
-	var spriteBlockOfGround6 = platforms.create(300, 720, 'blockOfGround');
-	spriteBlockOfGround6.body.immovable = true;
-	spriteBlockOfGround6.scale.x = 0.25;
-	spriteBlockOfGround6.scale.y = 0.25;
-	var spriteBlockOfGround7 = platforms.create(350, 720, 'blockOfGround');
-	spriteBlockOfGround7.body.immovable = true;
-	spriteBlockOfGround7.scale.x = 0.25;
-	spriteBlockOfGround7.scale.y = 0.25;
-	var spriteBlockOfGround8 = platforms.create(400, 720, 'blockOfGround');
-	spriteBlockOfGround8.body.immovable = true;
-	spriteBlockOfGround8.scale.x = 0.25;
-	spriteBlockOfGround8.scale.y = 0.25;
-	var spriteBlockOfGround9 = platforms.create(450, 720, 'blockOfGround');
-	spriteBlockOfGround9.body.immovable = true;
-	spriteBlockOfGround9.scale.x = 0.25;
-	spriteBlockOfGround9.scale.y = 0.25;
-	var spriteBlockOfGround10 = platforms.create(500, 720, 'blockOfGround');
-	spriteBlockOfGround10.body.immovable = true;
-	spriteBlockOfGround10.scale.x = 0.25;
-	spriteBlockOfGround10.scale.y = 0.25;
-	var spriteBlockOfGround11 = platforms.create(550, 720, 'blockOfGround');
-	spriteBlockOfGround11.body.immovable = true;
-	spriteBlockOfGround11.scale.x = 0.25;
-	spriteBlockOfGround11.scale.y = 0.25;
-	var spriteBlockOfGround12 = platforms.create(600, 720, 'blockOfGround');
-	spriteBlockOfGround12.body.immovable = true;
-	spriteBlockOfGround12.scale.x = 0.25;
-	spriteBlockOfGround12.scale.y = 0.25;
-	var spriteBlockOfGround13 = platforms.create(650, 720, 'blockOfGround');
-	spriteBlockOfGround13.body.immovable = true;
-	spriteBlockOfGround13.scale.x = 0.25;
-	spriteBlockOfGround13.scale.y = 0.25;
-	var spriteBlockOfGround14 = platforms.create(700, 720, 'blockOfGround');
-	spriteBlockOfGround14.body.immovable = true;
-	spriteBlockOfGround14.scale.x = 0.25;
-	spriteBlockOfGround14.scale.y = 0.25;
-	var spriteBlockOfGround15 = platforms.create(750, 720, 'blockOfGround');
-	spriteBlockOfGround15.body.immovable = true;
-	spriteBlockOfGround15.scale.x = 0.25;
-	spriteBlockOfGround15.scale.y = 0.25;
-	var spriteBlockOfGround16 = platforms.create(800, 720, 'blockOfGround');
-	spriteBlockOfGround16.body.immovable = true;
-	spriteBlockOfGround16.scale.x = 0.25;
-	spriteBlockOfGround16.scale.y = 0.25;
-	var spriteBlockOfGround17 = platforms.create(850, 720, 'blockOfGround');
-	spriteBlockOfGround17.body.immovable = true;
-	spriteBlockOfGround17.scale.x = 0.25;
-	spriteBlockOfGround17.scale.y = 0.25;
-	var spriteBlockOfGround18 = platforms.create(900, 720, 'blockOfGround');
-	spriteBlockOfGround18.body.immovable = true;
-	spriteBlockOfGround18.scale.x = 0.25;
-	spriteBlockOfGround18.scale.y = 0.25;
-	var spriteBlockOfGround19 = platforms.create(950, 720, 'blockOfGround');
-	spriteBlockOfGround19.body.immovable = true;
-	spriteBlockOfGround19.scale.x = 0.25;
-	spriteBlockOfGround19.scale.y = 0.25;
-	var spriteBlockOfGround20 = platforms.create(1000, 720, 'blockOfGround');
-	spriteBlockOfGround20.body.immovable = true;
-	spriteBlockOfGround20.scale.x = 0.25;
-	spriteBlockOfGround20.scale.y = 0.25;
-
-	var spriteBlockOfGround21 = platforms.create(250, 570, 'blockOfGround');
-	spriteBlockOfGround21.body.immovable = true;
-	spriteBlockOfGround21.scale.x = 0.25;
-	spriteBlockOfGround21.scale.y = 0.25;
-	var spriteBlockOfGround22 = platforms.create(300, 570, 'blockOfGround');
-	spriteBlockOfGround22.body.immovable = true;
-	spriteBlockOfGround22.scale.x = 0.25;
-	spriteBlockOfGround22.scale.y = 0.25;
-	var spriteBlockOfGround23 = platforms.create(350, 570, 'blockOfGround');
-	spriteBlockOfGround23.body.immovable = true;
-	spriteBlockOfGround23.scale.x = 0.25;
-	spriteBlockOfGround23.scale.y = 0.25;
-	var spriteBlockOfGround24 = platforms.create(400, 570, 'blockOfGround');
-	spriteBlockOfGround24.body.immovable = true;
-	spriteBlockOfGround24.scale.x = 0.25;
-	spriteBlockOfGround24.scale.y = 0.25;
-
-	var spriteBlockOfGround25 = platforms.create(150, 430, 'blockOfGround');
-	spriteBlockOfGround25.body.immovable = true;
-	spriteBlockOfGround25.scale.x = 0.25;
-	spriteBlockOfGround25.scale.y = 0.25;
-
-	var spriteBlockOfGround26 = platforms.create(100, 300, 'blockOfGround');
-	spriteBlockOfGround26.body.immovable = true;
-	spriteBlockOfGround26.scale.x = 0.25;
-	spriteBlockOfGround26.scale.y = 0.25;
-	var spriteBlockOfGround27 = platforms.create(50, 300, 'blockOfGround');
-	spriteBlockOfGround27.body.immovable = true;
-	spriteBlockOfGround27.scale.x = 0.25;
-	spriteBlockOfGround27.scale.y = 0.25;
-	var spriteBlockOfGround28 = platforms.create(0, 300, 'blockOfGround');
-	spriteBlockOfGround28.body.immovable = true;
-	spriteBlockOfGround28.scale.x = 0.25;
-	spriteBlockOfGround28.scale.y = 0.25;
-
-	var spriteBlockOfGround29 = platforms.create(250, 200, 'blockOfGround');
-	spriteBlockOfGround29.body.immovable = true;
-	spriteBlockOfGround29.scale.x = 0.25;
-	spriteBlockOfGround29.scale.y = 0.25;
-	var spriteBlockOfGround30 = platforms.create(450, 200, 'blockOfGround');
-	spriteBlockOfGround30.body.immovable = true;
-	spriteBlockOfGround30.scale.x = 0.25;
-	spriteBlockOfGround30.scale.y = 0.25;
-	var spriteBlockOfGround31 = platforms.create(650, 200, 'blockOfGround');
-	spriteBlockOfGround31.body.immovable = true;
-	spriteBlockOfGround31.scale.x = 0.25;
-	spriteBlockOfGround31.scale.y = 0.25;
-
-	var spriteBlockOfGround32 = platforms.create(800, 100, 'blockOfGround');
-	spriteBlockOfGround32.body.immovable = true;
-	spriteBlockOfGround32.scale.x = 0.25;
-	spriteBlockOfGround32.scale.y = 0.25;
-	var spriteBlockOfGround33 = platforms.create(950, 100, 'blockOfGround');
-	spriteBlockOfGround33.body.immovable = true;
-	spriteBlockOfGround33.scale.x = 0.25;
-	spriteBlockOfGround33.scale.y = 0.25;
-	var spriteBlockOfGround34 = platforms.create(1000, 100, 'blockOfGround');
-	spriteBlockOfGround34.body.immovable = true;
-	spriteBlockOfGround34.scale.x = 0.25;
-	spriteBlockOfGround34.scale.y = 0.25;
-
-	var spriteBlockOfGround35 = platforms.create(1000, 500, 'blockOfGround');
-	spriteBlockOfGround35.body.immovable = true;
-	spriteBlockOfGround35.scale.x = 0.25;
-	spriteBlockOfGround35.scale.y = 0.25;
-	var spriteBlockOfGround36 = platforms.create(950, 500, 'blockOfGround');
-	spriteBlockOfGround36.body.immovable = true;
-	spriteBlockOfGround36.scale.x = 0.25;
-	spriteBlockOfGround36.scale.y = 0.25;
-	var spriteBlockOfGround37 = platforms.create(900, 500, 'blockOfGround');
-	spriteBlockOfGround37.body.immovable = true;
-	spriteBlockOfGround37.scale.x = 0.25;
-	spriteBlockOfGround37.scale.y = 0.25;
-
-	var spriteBlockOfGround37 = platforms.create(500, 670, 'blockOfGround');
-	spriteBlockOfGround37.body.immovable = true;
-	spriteBlockOfGround37.scale.x = 0.25;
-	spriteBlockOfGround37.scale.y = 0.25;
-	var spriteBlockOfGround38 = platforms.create(450, 620, 'blockOfGround');
-	spriteBlockOfGround38.body.immovable = true;
-	spriteBlockOfGround38.scale.x = 0.25;
-	spriteBlockOfGround38.scale.y = 0.25;
-
-	var spriteBlockOfGround39 = platforms.create(650, 570, 'blockOfGround');
-	spriteBlockOfGround39.body.immovable = true;
-	spriteBlockOfGround39.scale.x = 0.25;
-	spriteBlockOfGround39.scale.y = 0.25;
-	var spriteBlockOfGround40 = platforms.create(800, 570, 'blockOfGround');
-	spriteBlockOfGround40.body.immovable = true;
-	spriteBlockOfGround40.scale.x = 0.25;
-	spriteBlockOfGround40.scale.y = 0.25;
-	var spriteBlockOfGround41 = platforms.create(800, 370, 'blockOfGround');
-	spriteBlockOfGround41.body.immovable = true;
-	spriteBlockOfGround41.scale.x = 0.25;
-	spriteBlockOfGround41.scale.y = 0.25;
-
-	var spriteBlockOfGround42 = platforms.create(980, 670, 'blockOfGround');
-	spriteBlockOfGround42.body.immovable = true;
-	spriteBlockOfGround42.scale.x = 0.25;
-	spriteBlockOfGround42.scale.y = 0.25;
-
+   
 	// Add gift for collect
 	gifts = game.add.group();
 	
@@ -272,9 +95,9 @@ function create() {
 	spriteGift4.body.gravity.y = 300;
 	var spriteGift5 = gifts.create(990, 500, 'gift'); 
 	spriteGift5.body.gravity.y = 300;
-	var spriteGift6 = gifts.create(460, 100, 'gift'); 
+	var spriteGift6 = gifts.create(468, 100, 'gift'); 
 	spriteGift6.body.gravity.y = 300;
-	var spriteGift7 = gifts.create(800, 100, 'gift'); 
+	var spriteGift7 = gifts.create(775, 100, 'gift'); 
 	spriteGift7.body.gravity.y = 300;
 	var spriteGift8 = gifts.create(900, 300, 'gift'); 
 	spriteGift8.body.gravity.y = 300;
@@ -286,126 +109,127 @@ function create() {
 	// Enable physics for spikes
 	spikes.enableBody = true;
 
-	var spike1 = spikes.create(535, 688, 'spike');
+	var spike1 = spikes.create(543, 682, 'spike');
 	spike1.body.immovable = true;
 	spike1.scale.x = 1.5;
 	spike1.scale.y = 1.5;
-	var spike2 = spikes.create(550, 688, 'spike');
+	var spike2 = spikes.create(558, 682, 'spike');
 	spike2.body.immovable = true;
 	spike2.scale.x = 1.5;
 	spike2.scale.y = 1.5; 
-	var spike3 = spikes.create(565, 688, 'spike');
+	var spike3 = spikes.create(573, 682, 'spike');
 	spike3.body.immovable = true;
 	spike3.scale.x = 1.5;
 	spike3.scale.y = 1.5;
-	var spike4 = spikes.create(580, 688, 'spike');
+	var spike4 = spikes.create(588, 682, 'spike');
 	spike4.body.immovable = true;
 	spike4.scale.x = 1.5;
 	spike4.scale.y = 1.5;  
-	var spike5 = spikes.create(595, 688, 'spike');
+	var spike5 = spikes.create(603, 682, 'spike');
 	spike5.body.immovable = true;
 	spike5.scale.x = 1.5;
 	spike5.scale.y = 1.5;  
-	var spike6 = spikes.create(610, 688, 'spike');
+	var spike6 = spikes.create(618, 682, 'spike');
 	spike6.body.immovable = true;
 	spike6.scale.x = 1.5;
 	spike6.scale.y = 1.5;  
-	var spike7 = spikes.create(625, 688, 'spike');
+	var spike7 = spikes.create(633, 682, 'spike');
 	spike7.body.immovable = true;
 	spike7.scale.x = 1.5;
 	spike7.scale.y = 1.5;  
-	var spike8 = spikes.create(640, 688, 'spike');
+	var spike8 = spikes.create(648, 682, 'spike');
 	spike8.body.immovable = true;
 	spike8.scale.x = 1.5;
 	spike8.scale.y = 1.5;  
-	var spike9 = spikes.create(655, 688, 'spike');
+	var spike9 = spikes.create(663, 682, 'spike');
 	spike9.body.immovable = true;
 	spike9.scale.x = 1.5;
 	spike9.scale.y = 1.5;  
-	var spike10 = spikes.create(670, 688, 'spike');
+	var spike10 = spikes.create(678, 682, 'spike');
 	spike10.body.immovable = true;
 	spike10.scale.x = 1.5;
 	spike10.scale.y = 1.5;  
-	var spike11 = spikes.create(685, 688, 'spike');
+	var spike11 = spikes.create(693, 682, 'spike');
 	spike11.body.immovable = true;
 	spike11.scale.x = 1.5;
 	spike11.scale.y = 1.5;  
-	var spike12 = spikes.create(700, 688, 'spike');
+	var spike12 = spikes.create(708, 682, 'spike');
 	spike12.body.immovable = true;
 	spike12.scale.x = 1.5;
 	spike12.scale.y = 1.5;  
-	var spike13 = spikes.create(715, 688, 'spike');
+	var spike13 = spikes.create(723, 682, 'spike');
 	spike13.body.immovable = true;
 	spike13.scale.x = 1.5;
 	spike13.scale.y = 1.5;  
-	var spike14 = spikes.create(730, 688, 'spike');
+	var spike14 = spikes.create(738, 682, 'spike');
 	spike14.body.immovable = true;
 	spike14.scale.x = 1.5;
 	spike14.scale.y = 1.5;  
-	var spike15 = spikes.create(745, 688, 'spike');
+	var spike15 = spikes.create(753, 682, 'spike');
 	spike15.body.immovable = true;
 	spike15.scale.x = 1.5;
 	spike15.scale.y = 1.5;  
-	var spike16 = spikes.create(760, 688, 'spike');
+	var spike16 = spikes.create(768, 682, 'spike');
 	spike16.body.immovable = true;
 	spike16.scale.x = 1.5;
 	spike16.scale.y = 1.5;  
-	var spike17 = spikes.create(775, 688, 'spike');
+	var spike17 = spikes.create(783, 682, 'spike');
 	spike17.body.immovable = true;
 	spike17.scale.x = 1.5;
 	spike17.scale.y = 1.5;  
-	var spike18 = spikes.create(790, 688, 'spike');
+	var spike18 = spikes.create(798, 682, 'spike');
 	spike18.body.immovable = true;
 	spike18.scale.x = 1.5;
 	spike18.scale.y = 1.5;  
-	var spike19 = spikes.create(805, 688, 'spike');
+	var spike19 = spikes.create(813, 682, 'spike');
 	spike19.body.immovable = true;
 	spike19.scale.x = 1.5;
 	spike19.scale.y = 1.5;  
-	var spike20 = spikes.create(820, 688, 'spike');
+	var spike20 = spikes.create(828, 682, 'spike');
 	spike20.body.immovable = true;
 	spike20.scale.x = 1.5;
 	spike20.scale.y = 1.5;  
-	var spike21 = spikes.create(835, 688, 'spike');
+	var spike21 = spikes.create(843, 682, 'spike');
 	spike21.body.immovable = true;
 	spike21.scale.x = 1.5;
 	spike21.scale.y = 1.5;  
-	var spike22 = spikes.create(850, 688, 'spike');
+	var spike22 = spikes.create(858, 682, 'spike');
 	spike22.body.immovable = true;
 	spike22.scale.x = 1.5;
 	spike22.scale.y = 1.5;  
-	var spike23 = spikes.create(865, 688, 'spike');
+	var spike23 = spikes.create(873, 682, 'spike');
 	spike23.body.immovable = true;
 	spike23.scale.x = 1.5;
 	spike23.scale.y = 1.5;  
-	var spike24 = spikes.create(880, 688, 'spike');
+	var spike24 = spikes.create(888, 682, 'spike');
 	spike24.body.immovable = true;
 	spike24.scale.x = 1.5;
 	spike24.scale.y = 1.5;  
-	var spike25 = spikes.create(895, 688, 'spike');
+	var spike25 = spikes.create(903, 682, 'spike');
 	spike25.body.immovable = true;
 	spike25.scale.x = 1.5;
 	spike25.scale.y = 1.5;
-	var spike26 = spikes.create(910, 688, 'spike');
+	var spike26 = spikes.create(918, 682, 'spike');
 	spike26.body.immovable = true;
 	spike26.scale.x = 1.5;
 	spike26.scale.y = 1.5;
-	var spike27 = spikes.create(925, 688, 'spike');
+	var spike27 = spikes.create(933, 682, 'spike');
 	spike27.body.immovable = true;
 	spike27.scale.x = 1.5;
 	spike27.scale.y = 1.5;
-	var spike28 = spikes.create(940, 688, 'spike');
-	spike28.body.immovable = true;
-	spike28.scale.x = 1.5;
-	spike28.scale.y = 1.5;
-	var spike29 = spikes.create(955, 688, 'spike');
-	spike29.body.immovable = true;
-	spike29.scale.x = 1.5;
-	spike29.scale.y = 1.5;
-	var spike29 = spikes.create(150, 688, 'spike');
+	//var spike28 = spikes.create(948, 682, 'spike');
+	//spike28.body.immovable = true;
+	//spike28.scale.x = 1.5;
+	//spike28.scale.y = 1.5;
+	//var spike29 = spikes.create(955, 688, 'spike');
+	//spike29.body.immovable = true;
+	//spike29.scale.x = 1.5;
+	//spike29.scale.y = 1.5;
+	var spike29 = spikes.create(150, 682, 'spike');
 	spike29.body.immovable = true;
 	spike29.scale.x = 1.5;
 	spike29.scale.y = 1.5;      
+
 
 	// Enable physics on the player
     game.physics.enable(spritePlayer, Phaser.Physics.ARCADE);
@@ -423,17 +247,27 @@ function create() {
 	//  The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#f00' });
     lifeText = game.add.text(16, 64, 'life: 3', { fontSize: '32px', fill: '#f00' });
-	}
 	
+	
+}
 function update() {
 	
 	//Prevents ball from moving
 	spritePlayer.body.velocity.x = 0;
 	
 	//checks for right arrow key
+	if(cursors.up.isDown)
+	{
+		if(spritePlayer.body.onFloor())
+    	{
+        	spritePlayer.body.velocity.y = -200;
+    	}
+    }
+
 	if(cursors.right.isDown){
 
         spritePlayer.body.velocity.x = 150;
+        
 	} 
 	//checks for left arrow key
 	else if(cursors.left.isDown){
@@ -441,28 +275,29 @@ function update() {
         spritePlayer.body.velocity.x = -150;
 	}
 	//jump for arrow key up
-	if(cursors.up.isDown){
-		spritePlayer.body.velocity.y = -250;
-		jumpTimer = game.time.now + 750;
-	}
+	//if(cursors.up.isDown){
+	//	spritePlayer.body.velocity.y = -250;
+	//	jumpTimer = game.time.now + 750;
+	//}
 
+	// colison
+	game.physics.arcade.collide(spritePlayer, layer);
+	game.physics.arcade.collide(gifts, layer);
+	game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
+	game.physics.arcade.overlap(spritePlayer, spikes, killPlayer, null, this);
 	if(life == 0){
 		var lose = game.add.sprite(450, 250, 'lose');
 		spritePlayer.kill();
 	}
 
-	game.physics.arcade.collide(spritePlayer, platforms);
-	game.physics.arcade.collide(gifts, platforms);
-
-	game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
-	game.physics.arcade.overlap(spritePlayer, spikes, killPlayer, null, this);
-
 }
 
 function render () {
 	//game.debug.text(game.time.suggestedFps, 32, 32);
+	//game.debug.text("Is on floor: " + spritePlayer.body.onFloor(), 32, 32);
     
 }
+
 function collectGift (spritePlayer, spriteGift){
 	
 	spriteGift.kill();
@@ -471,9 +306,6 @@ function collectGift (spritePlayer, spriteGift){
 	scoreText.text = 'Score: ' + score;
 	music = game.add.audio('hoho');
 	music.play();
-
-	
-
 }
 
 function killPlayer (spritePlayer,spike){
@@ -483,11 +315,7 @@ function killPlayer (spritePlayer,spike){
 	music.play();
 	life -=1;
 	lifeText.text = 'Life: ' + life;
-	spritePlayer.reset(32, game.world.height - 100);
-	
-
-
-	
+	spritePlayer.reset(32, game.world.height - 100);	
 }
 
 </script>
