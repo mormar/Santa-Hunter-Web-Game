@@ -16,7 +16,7 @@
 <script type="text/javascript">
 
 var game = new Phaser.Game(1020, 765, Phaser.AUTO, '', { preload: preload,
-	create: create, update: update, render: render  });
+	create: create, update: update });
 
 function preload() {
 	game.load.image('background','assets/ForestNight.png');
@@ -48,12 +48,13 @@ var life = 3;
 var map;
 var layer;
 var spriteBackground; 
+var player;
 
 
 function create() {
 
-	//music = game.add.audio('music');
-	//music.play();
+	music = game.add.audio('music');
+	music.play();
 
 	// Add physics Arcade Physics system
 	game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -71,12 +72,8 @@ function create() {
 	map.addTilesetImage('santaset','tiles');
 	layer = map.createLayer('Layer1');
 	map.setCollision(1);
-	layer.resizeWorld();
-	
-	
-	// Player
-	spritePlayer = game.add.sprite(32, game.world.height - 100, 'player');
-   
+	layer.resizeWorld(1);
+	   
 	// Add gift for collect
 	gifts = game.add.group();
 	
@@ -101,7 +98,7 @@ function create() {
 	spriteGift7.body.gravity.y = 300;
 	var spriteGift8 = gifts.create(900, 300, 'gift'); 
 	spriteGift8.body.gravity.y = 300;
-	var spriteGift9 = gifts.create(650, 500, 'gift'); 
+	var spriteGift9 = gifts.create(671, 500, 'gift'); 
 	spriteGift9.body.gravity.y = 300;
 
 	// Add spike
@@ -217,22 +214,16 @@ function create() {
 	spike27.body.immovable = true;
 	spike27.scale.x = 1.5;
 	spike27.scale.y = 1.5;
-	//var spike28 = spikes.create(948, 682, 'spike');
-	//spike28.body.immovable = true;
-	//spike28.scale.x = 1.5;
-	//spike28.scale.y = 1.5;
-	//var spike29 = spikes.create(955, 688, 'spike');
-	//spike29.body.immovable = true;
-	//spike29.scale.x = 1.5;
-	//spike29.scale.y = 1.5;
-	var spike29 = spikes.create(150, 682, 'spike');
-	spike29.body.immovable = true;
-	spike29.scale.x = 1.5;
-	spike29.scale.y = 1.5;      
+	var spike28 = spikes.create(150, 682, 'spike');
+	spike28.body.immovable = true;
+	spike28.scale.x = 1.5;
+	spike28.scale.y = 1.5;      
 
+	// Player
+	spritePlayer = game.add.sprite(32, game.world.height - 100, 'player');
 
 	// Enable physics on the player
-    game.physics.enable(spritePlayer, Phaser.Physics.ARCADE);
+    game.physics.arcade.enable(spritePlayer);
     
     // Player physics properties.
     spritePlayer.body.bounce.y = 0.2;
@@ -242,7 +233,6 @@ function create() {
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	
 	//  The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#f00' });
@@ -252,18 +242,15 @@ function create() {
 }
 function update() {
 	
+	// colison
+	game.physics.arcade.collide(spritePlayer, layer);
+	game.physics.arcade.collide(gifts, layer);
+	game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
+	game.physics.arcade.overlap(spritePlayer, spikes, killPlayer, null, this);
+
 	//Prevents ball from moving
 	spritePlayer.body.velocity.x = 0;
 	
-	//checks for right arrow key
-	if(cursors.up.isDown)
-	{
-		if(spritePlayer.body.onFloor())
-    	{
-        	spritePlayer.body.velocity.y = -200;
-    	}
-    }
-
 	if(cursors.right.isDown){
 
         spritePlayer.body.velocity.x = 150;
@@ -274,27 +261,23 @@ function update() {
 
         spritePlayer.body.velocity.x = -150;
 	}
-	//jump for arrow key up
-	//if(cursors.up.isDown){
-	//	spritePlayer.body.velocity.y = -250;
-	//	jumpTimer = game.time.now + 750;
-	//}
 
-	// colison
-	game.physics.arcade.collide(spritePlayer, layer);
-	game.physics.arcade.collide(gifts, layer);
-	game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
-	game.physics.arcade.overlap(spritePlayer, spikes, killPlayer, null, this);
+	if (cursors.up.isDown && spritePlayer.body.onFloor() )
+    {
+        spritePlayer.body.velocity.y = -350;
+    }
 	if(life == 0){
 		var lose = game.add.sprite(450, 250, 'lose');
+		spritePlayer.kill();
+	}
+	if(score == 100){
+		var lose = game.add.sprite(390, 250, 'win');
 		spritePlayer.kill();
 	}
 
 }
 
 function render () {
-	//game.debug.text(game.time.suggestedFps, 32, 32);
-	//game.debug.text("Is on floor: " + spritePlayer.body.onFloor(), 32, 32);
     
 }
 
