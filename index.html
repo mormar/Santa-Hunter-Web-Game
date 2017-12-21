@@ -25,11 +25,13 @@ function preload() {
 	game.load.image('spike','assets/Spike.png');
 	game.load.image('gift','assets/Gift1.png');
 	game.load.image('win','assets/Thanks.png');
-	game.load.image('lose','assets/Try.png')
+	game.load.image('lose','assets/Try.png');
+	game.load.image('firstaid','assets/firstaid.png');
 
-	game.load.audio('music','assets/sounds/Jingle.mp3')
-	game.load.audio('hoho','assets/sounds/CollectSound.mp3')
-	game.load.audio('death','assets/sounds/DeathSound.mp3')
+	game.load.audio('music','assets/sounds/Jingle.mp3');
+	game.load.audio('hoho','assets/sounds/CollectSound.mp3');
+	game.load.audio('death','assets/sounds/DeathSound.mp3');
+	game.load.audio('jump','assets/sounds/jump.wav')
 
 	game.load.tilemap('tilemap', 'assets/level1.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.image('tiles', 'assets/tile1.png');
@@ -52,13 +54,13 @@ var spriteBackground;
 var music;
 var player;
 var lose;
+var firstaid;
 
 function create() {
-
-	music = game.add.audio('music');
-	music.loop = true;
-	music.play();
-
+	// Add music
+	//music = game.add.audio('music');
+	//music.loop = true;
+	//music.play();
 
 	// Add physics Arcade Physics system
 	game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -71,22 +73,18 @@ function create() {
       spriteBackground.scale.y = 0.72;
 
 	// Add map
-	// game.stage.backgroundColor = '#a9f0ff';
 	map = game.add.tilemap('tilemap');
 	map.addTilesetImage('santaset','tiles');
 	layer = map.createLayer('Layer1');
 	map.setCollision(1);
 	layer.resizeWorld();
 
-
-
 	// Add gift for collect
 	gifts = game.add.group();
-  //
-	// // Enable physics for gifts
+ 
+	// Enable physics for gifts
 	gifts.enableBody = true;
-	//gifts.body.setSize(29,29,0,0);
-  //
+
 	var spriteGift = gifts.create(100, 500, 'gift');
 	spriteGift.body.gravity.y = 300;
 	var spriteGift1 = gifts.create(470, 650, 'gift');
@@ -107,8 +105,6 @@ function create() {
 	spriteGift8.body.gravity.y = 300;
 	var spriteGift9 = gifts.create(671, 500, 'gift');
 	spriteGift9.body.gravity.y = 300;
-  //
-
 
 	spriteGift.body.setSize(28.5,28.5,0,0);
 	spriteGift1.body.setSize(28.5,28.5,0,0);
@@ -121,13 +117,10 @@ function create() {
 	spriteGift8.body.setSize(28.5,28.5,0,0);
 	spriteGift9.body.setSize(28.5,28.5,0,0);
 
-
 	// Add spike
 	spikes = game.add.group();
 	// Enable physics for spikes
 	spikes.enableBody = true;
-
-
 
 	var spike1 = spikes.create(543, 682, 'spike');
 	spike1.body.immovable = true;
@@ -326,28 +319,34 @@ function create() {
 	spike28.anchor.y = 0;
 	spike28.body.setSize(1,32,16,16);
 
+	// Add firstaid
+	firstaids = game.add.group();
+	// Enable physics for firstaids
+	firstaids.enableBody = true;
+
+	var firstaid = firstaids.create(775, 280,'firstaid');
+	firstaid.body.gravity.y = 300;  
+
 	// Player
 	spritePlayer = game.add.sprite(32, game.world.height - 100, 'player');
 	spritePlayer.enableBody;
-  //
-
+  
 	// Enable physics on the player
-  game.physics.arcade.enable(spritePlayer);
+  	game.physics.arcade.enable(spritePlayer);
 
     // Player physics properties.
-		spritePlayer.body.setSize(29,29,0,0);
+	spritePlayer.body.setSize(29,29,0,0);
     spritePlayer.body.bounce.y = 0.2;
     spritePlayer.body.gravity.y = 75;
     spritePlayer.body.maxVelocity.y = 150;
     spritePlayer.body.collideWorldBounds = true;
-  //
-  //Our controls.
+  
+  	//Our controls.
     cursors = game.input.keyboard.createCursorKeys();
-  //
+  
 	//The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#f00' });
     lifeText = game.add.text(16, 64, 'life: 3', { fontSize: '32px', fill: '#f00' });
-  //
 
 }
 function update() {
@@ -355,60 +354,74 @@ function update() {
 	// colison
 	game.physics.arcade.collide(spritePlayer, layer);
 	game.physics.arcade.collide(gifts, layer);
+	game.physics.arcade.collide(firstaids, layer);
 	game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
 	game.physics.arcade.overlap(spritePlayer, spikes, killPlayer, null, this);
+	game.physics.arcade.overlap(spritePlayer, firstaids, collectFirstaid, null, this);
 
 	// Prevents ball from moving
 	spritePlayer.body.velocity.x = 0;
 
-	if(cursors.right.isDown){
-
+	if(cursors.right.isDown)
+	{
         spritePlayer.body.velocity.x = 150;
 
 	}
 	//checks for left arrow key
-	else if(cursors.left.isDown){
-
+	else if(cursors.left.isDown)
+	{
         spritePlayer.body.velocity.x = -150;
 	}
 
 	if (cursors.up.isDown && spritePlayer.body.onFloor() )
     {
+        music = game.add.audio('jump');
+		music.play();
         spritePlayer.body.velocity.y = -350;
     }
-	if(life == 0){
+
+	if(life == 0)
+	{
 		lose = game.add.sprite(450, 250, 'lose');
-		life-=1
+		life-=1;
 		spritePlayer.kill();
 	}
-	if(score == 100){
+
+	if(score == 100)
+	{
 		lose = game.add.sprite(390, 250, 'win');
-		score +=1
+		score +=1;
 		spritePlayer.kill();
 	}
 
 }
 
-
-
-function collectGift (spritePlayer, spriteGift){
-
+function collectGift (spritePlayer, spriteGift)
+{
 	spriteGift.kill();
-
 	score +=10;
 	scoreText.text = 'Score: ' + score;
 	music = game.add.audio('hoho');
 	music.play();
 }
 
-function killPlayer (spritePlayer,spike){
-
+function killPlayer (spritePlayer,spike)
+{
 	spritePlayer.kill();
 	music = game.add.audio('death');
 	music.play();
 	life -=1;
 	lifeText.text = 'Life: ' + life;
 	spritePlayer.reset(32, game.world.height - 100);
+}
+
+function collectFirstaid (spritePlayer,firstaid)
+{
+	firstaid.kill();
+	music = game.add.audio('hoho');
+	music.play();
+	life +=1;
+	lifeText.text = 'Life: ' + life;
 }
 
 </script>
