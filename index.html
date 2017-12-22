@@ -1,439 +1,454 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8"/>
-	<title>Santa Hunter</title>
-	<!-- include phaser lib -->
-	<script type="text/javascript" src="phaser.min.js"></script>
-	<style type="text/css">
-		body{
-			background-color: #B0C4DE;				
-		}
-		.text{
-			font-family: Fantasy;
-			font-weight: bold;
-			font-size: 40px;
-			margin: 0;
-			text-align: center;
-			color: red;
-		}
-	</style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Santa Hunter</title>
+        <!-- include phaser lib -->
+        <script type="text/javascript" src="phaser.min.js"></script>
+        <style type="text/css">
+                body{
+                        background-color: #B0C4DE;
+                }
+                .text{
+                        font-family: Fantasy;
+                        font-weight: bold;
+                        font-size: 40px;
+                        margin: 0;
+                        text-align: center;
+                        color: red;
+                }
+                .game{
+                        align-self: center;
+                }
+								
+        </style>
+        <link rel="stylesheet" href="css/bootstrap.css">
+    </head>
+    <body>
 
-<h3 class="text">Santa Hunter</h3>
-<script type="text/javascript">
+        <h3 class="text">Santa Hunter</h3>
+	<div class="container">
+		<div class="row">
+				<div class="col-lg-1"><p></p></div>
+      	<div class="col-lg-4" id="phaser"></div>
+            <script type="text/javascript">
 
-var game = new Phaser.Game(1020, 765, Phaser.AUTO, '', { preload: preload,
-	create: create, update: update});
+                var game = new Phaser.Game(1020, 765, Phaser.AUTO, 'phaser', {preload: preload,
+                    create: create, update: update});
+								this.game.scale.pageAlignHorizontally = true;
+								this.game.scale.pageAlignVertically = true;
+								this.game.scale.refresh();
+                function preload() {
+                    game.load.image('background', 'assets/ForestNight.png');
+                    game.load.image('blockOfGround', 'assets/surface8.png');
+                    game.load.image('player', 'assets/PlayerBeard.png');
+                    game.load.image('spike', 'assets/Spike.png');
+                    game.load.image('gift', 'assets/Gift1.png');
+                    game.load.image('win', 'assets/Thanks.png');
+                    game.load.image('lose', 'assets/Try.png');
+                    game.load.image('firstaid', 'assets/firstaid.png');
 
-function preload() {
-	game.load.image('background','assets/ForestNight.png');
-	game.load.image('blockOfGround','assets/surface8.png');
-	game.load.image('player','assets/PlayerBeard.png');
-	game.load.image('spike','assets/Spike.png');
-	game.load.image('gift','assets/Gift1.png');
-	game.load.image('win','assets/Thanks.png');
-	game.load.image('lose','assets/Try.png');
-	game.load.image('firstaid','assets/firstaid.png');
+                    game.load.audio('music', 'assets/sounds/Jingle.mp3');
+                    game.load.audio('hoho', 'assets/sounds/CollectSound.mp3');
+                    game.load.audio('death', 'assets/sounds/DeathSound.mp3');
+                    game.load.audio('jump', 'assets/sounds/jump.wav')
 
-	game.load.audio('music','assets/sounds/Jingle.mp3');
-	game.load.audio('hoho','assets/sounds/CollectSound.mp3');
-	game.load.audio('death','assets/sounds/DeathSound.mp3');
-	game.load.audio('jump','assets/sounds/jump.wav')
+                    game.load.tilemap('tilemap', 'assets/level1.json', null, Phaser.Tilemap.TILED_JSON);
+                    game.load.image('tiles', 'assets/tile1.png');
 
-	game.load.tilemap('tilemap', 'assets/level1.json', null, Phaser.Tilemap.TILED_JSON);
-	game.load.image('tiles', 'assets/tile1.png');
-
-}
+                }
 //Global vars
-var cursors;
-var spritePlayer;
-var jumpButton;
-var jumpTimer = 0;
-var gifts;
-var score = 0;
-var scoreText;
-var lifeText;
-var life = 3;
-var map;
-var layer;
-var spikes;
-var spriteBackground;
-var music;
-var player;
-var lose;
-var firstaid;
+                var cursors;
+                var spritePlayer;
+                var jumpButton;
+                var jumpTimer = 0;
+                var gifts;
+                var score = 0;
+                var scoreText;
+                var lifeText;
+                var life = 3;
+                var map;
+                var layer;
+                var spikes;
+                var spriteBackground;
+                var music;
+                var player;
+                var lose;
+                var firstaid;
 
-function create() {
-	// Add music
-	//music = game.add.audio('music');
-	//music.loop = true;
-	//music.play();
+                function create() {
+                    // Add music
+                    //music = game.add.audio('music');
+                    //music.loop = true;
+                    //music.play();
 
-	// Add physics Arcade Physics system
-	game.physics.startSystem(Phaser.Physics.ARCADE);
+                    // Add physics Arcade Physics system
+                    game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	// Background
-	spriteBackground = game.add.sprite(0, 0, 'background');
+                    // Background
+                    spriteBackground = game.add.sprite(0, 0, 'background');
 
-    // Scale sprite background
-      spriteBackground.scale.x = 0.55;
-      spriteBackground.scale.y = 0.72;
+                    // Scale sprite background
+                    spriteBackground.scale.x = 0.55;
+                    spriteBackground.scale.y = 0.72;
 
-	// Add map
-	map = game.add.tilemap('tilemap');
-	map.addTilesetImage('santaset','tiles');
-	layer = map.createLayer('Layer1');
-	map.setCollision(1);
-	layer.resizeWorld();
+                    // Add map
+                    map = game.add.tilemap('tilemap');
+                    map.addTilesetImage('santaset', 'tiles');
+                    layer = map.createLayer('Layer1');
+                    map.setCollision(1);
+                    layer.resizeWorld();
 
-	// Add gift for collect
-	gifts = game.add.group();
- 
-	// Enable physics for gifts
-	gifts.enableBody = true;
+                    // Add gift for collect
+                    gifts = game.add.group();
 
-	var spriteGift = gifts.create(100, 500, 'gift');
-	spriteGift.body.gravity.y = 300;
-	var spriteGift1 = gifts.create(470, 650, 'gift');
-	spriteGift1.body.gravity.y = 300;
-	var spriteGift2 = gifts.create(160, 100, 'gift');
-	spriteGift2.body.gravity.y = 300;
-	var spriteGift3 = gifts.create(10, 100, 'gift');
-	spriteGift3.body.gravity.y = 300;
-	var spriteGift4 = gifts.create(970, 50, 'gift');
-	spriteGift4.body.gravity.y = 300;
-	var spriteGift5 = gifts.create(990, 500, 'gift');
-	spriteGift5.body.gravity.y = 300;
-	var spriteGift6 = gifts.create(468, 100, 'gift');
-	spriteGift6.body.gravity.y = 300;
-	var spriteGift7 = gifts.create(775, 100, 'gift');
-	spriteGift7.body.gravity.y = 300;
-	var spriteGift8 = gifts.create(900, 300, 'gift');
-	spriteGift8.body.gravity.y = 300;
-	var spriteGift9 = gifts.create(671, 500, 'gift');
-	spriteGift9.body.gravity.y = 300;
+                    // Enable physics for gifts
+                    gifts.enableBody = true;
 
-	spriteGift.body.setSize(28.5,28.5,0,0);
-	spriteGift1.body.setSize(28.5,28.5,0,0);
-	spriteGift2.body.setSize(28.5,28.5,0,0);
-	spriteGift3.body.setSize(28.5,28.5,0,0);
-	spriteGift4.body.setSize(28.5,28.5,0,0);
-	spriteGift5.body.setSize(28.5,28.5,0,0);
-	spriteGift6.body.setSize(28.5,28.5,0,0);
-	spriteGift7.body.setSize(28.5,28.5,0,0);
-	spriteGift8.body.setSize(28.5,28.5,0,0);
-	spriteGift9.body.setSize(28.5,28.5,0,0);
+                    var spriteGift = gifts.create(100, 500, 'gift');
+                    spriteGift.body.gravity.y = 300;
+                    var spriteGift1 = gifts.create(470, 650, 'gift');
+                    spriteGift1.body.gravity.y = 300;
+                    var spriteGift2 = gifts.create(160, 100, 'gift');
+                    spriteGift2.body.gravity.y = 300;
+                    var spriteGift3 = gifts.create(10, 100, 'gift');
+                    spriteGift3.body.gravity.y = 300;
+                    var spriteGift4 = gifts.create(970, 50, 'gift');
+                    spriteGift4.body.gravity.y = 300;
+                    var spriteGift5 = gifts.create(990, 500, 'gift');
+                    spriteGift5.body.gravity.y = 300;
+                    var spriteGift6 = gifts.create(468, 100, 'gift');
+                    spriteGift6.body.gravity.y = 300;
+                    var spriteGift7 = gifts.create(775, 100, 'gift');
+                    spriteGift7.body.gravity.y = 300;
+                    var spriteGift8 = gifts.create(900, 300, 'gift');
+                    spriteGift8.body.gravity.y = 300;
+                    var spriteGift9 = gifts.create(671, 500, 'gift');
+                    spriteGift9.body.gravity.y = 300;
 
-	// Add spike
-	spikes = game.add.group();
-	// Enable physics for spikes
-	spikes.enableBody = true;
+                    spriteGift.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift1.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift2.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift3.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift4.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift5.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift6.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift7.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift8.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift9.body.setSize(28.5, 28.5, 0, 0);
 
-	var spike1 = spikes.create(543, 682, 'spike');
-	spike1.body.immovable = true;
-	spike1.scale.x = 1.5;
-	spike1.scale.y = 1.5;
-	spike1.anchor.x = 0;
-	spike1.anchor.y = 0;
-	spike1.body.setSize(15,32,16,16);
-	var spike2 = spikes.create(558, 682, 'spike');
-	spike2.body.immovable = true;
-	spike2.scale.x = 1.5;
-	spike2.scale.y = 1.5;
-	spike2.anchor.x = 0;
-	spike2.anchor.y = 0;
-	spike2.body.setSize(15,32,16,16);
-	var spike3 = spikes.create(573, 682, 'spike');
-	spike3.body.immovable = true;
-	spike3.scale.x = 1.5;
-	spike3.scale.y = 1.5;
-	spike3.anchor.x = 0;
-	spike3.anchor.y = 0;
-	spike3.body.setSize(15,32,16,16);
-	var spike4 = spikes.create(588, 682, 'spike');
-	spike4.body.immovable = true;
-	spike4.scale.x = 1.5;
-	spike4.scale.y = 1.5;
-	spike4.anchor.x = 0;
-	spike4.anchor.y = 0;
-	spike4.body.setSize(15,32,16,16);
-	var spike5 = spikes.create(603, 682, 'spike');
-	spike5.body.immovable = true;
-	spike5.scale.x = 1.5;
-	spike5.scale.y = 1.5;
-	spike5.anchor.x = 0;
-	spike5.anchor.y = 0;
-	spike5.body.setSize(15,32,16,16);
-	var spike6 = spikes.create(618, 682, 'spike');
-	spike6.body.immovable = true;
-	spike6.scale.x = 1.5;
-	spike6.scale.y = 1.5;
-	spike6.anchor.x = 0;
-	spike6.anchor.y = 0;
-	spike6.body.setSize(15,32,16,16);
-	var spike7 = spikes.create(633, 682, 'spike');
-	spike7.body.immovable = true;
-	spike7.scale.x = 1.5;
-	spike7.scale.y = 1.5;
-	spike7.anchor.x = 0;
-	spike7.anchor.y = 0;
-	spike7.body.setSize(15,32,16,16);
-	var spike8 = spikes.create(648, 682, 'spike');
-	spike8.body.immovable = true;
-	spike8.scale.x = 1.5;
-	spike8.scale.y = 1.5;
-	spike8.anchor.x = 0;
-	spike8.anchor.y = 0;
-	spike8.body.setSize(15,32,16,16);
-	var spike9 = spikes.create(663, 682, 'spike');
-	spike9.body.immovable = true;
-	spike9.scale.x = 1.5;
-	spike9.scale.y = 1.5;
-	spike9.anchor.x = 0;
-	spike9.anchor.y = 0;
-	spike9.body.setSize(15,32,16,16);
-	var spike10 = spikes.create(678, 682, 'spike');
-	spike10.body.immovable = true;
-	spike10.scale.x = 1.5;
-	spike10.scale.y = 1.5;
-	spike10.anchor.x = 0;
-	spike10.anchor.y = 0;
-	spike10.body.setSize(15,32,16,16);
-	var spike11 = spikes.create(693, 682, 'spike');
-	spike11.body.immovable = true;
-	spike11.scale.x = 1.5;
-	spike11.scale.y = 1.5;
-	spike11.anchor.x = 0;
-	spike11.anchor.y = 0;
-	spike11.body.setSize(15,32,16,16);
-	var spike12 = spikes.create(708, 682, 'spike');
-	spike12.body.immovable = true;
-	spike12.scale.x = 1.5;
-	spike12.scale.y = 1.5;
-	spike12.anchor.x = 0;
-	spike12.anchor.y = 0;
-	spike12.body.setSize(15,32,16,16);
-	var spike13 = spikes.create(723, 682, 'spike');
-	spike13.body.immovable = true;
-	spike13.scale.x = 1.5;
-	spike13.scale.y = 1.5;
-	spike13.anchor.x = 0;
-	spike13.anchor.y = 0;
-	spike13.body.setSize(15,32,16,16);
-	var spike14 = spikes.create(738, 682, 'spike');
-	spike14.body.immovable = true;
-	spike14.scale.x = 1.5;
-	spike14.scale.y = 1.5;
-	spike14.anchor.x = 0;
-	spike14.anchor.y = 0;
-	spike14.body.setSize(15,32,16,16);
-	var spike15 = spikes.create(753, 682, 'spike');
-	spike15.body.immovable = true;
-	spike15.scale.x = 1.5;
-	spike15.scale.y = 1.5;
-	spike15.anchor.x = 0;
-	spike15.anchor.y = 0;
-	spike15.body.setSize(15,32,16,16);
-	var spike16 = spikes.create(768, 682, 'spike');
-	spike16.body.immovable = true;
-	spike16.scale.x = 1.5;
-	spike16.scale.y = 1.5;
-	spike16.anchor.x = 0;
-	spike16.anchor.y = 0;
-	spike16.body.setSize(15,32,16,16);
-	var spike17 = spikes.create(783, 682, 'spike');
-	spike17.body.immovable = true;
-	spike17.scale.x = 1.5;
-	spike17.scale.y = 1.5;
-	spike17.anchor.x = 0;
-	spike17.anchor.y = 0;
-	spike17.body.setSize(15,32,16,16);
-	var spike18 = spikes.create(798, 682, 'spike');
-	spike18.body.immovable = true;
-	spike18.scale.x = 1.5;
-	spike18.scale.y = 1.5;
-	spike18.anchor.x = 0;
-	spike18.anchor.y = 0;
-	spike18.body.setSize(15,32,16,16);
-	var spike19 = spikes.create(813, 682, 'spike');
-	spike19.body.immovable = true;
-	spike19.scale.x = 1.5;
-	spike19.scale.y = 1.5;
-	spike19.anchor.x = 0;
-	spike19.anchor.y = 0;
-	spike19.body.setSize(15,32,16,16);
-	var spike20 = spikes.create(828, 682, 'spike');
-	spike20.body.immovable = true;
-	spike20.scale.x = 1.5;
-	spike20.scale.y = 1.5;
-	spike20.anchor.x = 0;
-	spike20.anchor.y = 0;
-	spike20.body.setSize(15,32,16,16);
-	var spike21 = spikes.create(843, 682, 'spike');
-	spike21.body.immovable = true;
-	spike21.scale.x = 1.5;
-	spike21.scale.y = 1.5;
-	spike21.anchor.x = 0;
-	spike21.anchor.y = 0;
-	spike21.body.setSize(15,32,16,16);
-	var spike22 = spikes.create(858, 682, 'spike');
-	spike22.body.immovable = true;
-	spike22.scale.x = 1.5;
-	spike22.scale.y = 1.5;
-	spike22.anchor.x = 0;
-	spike22.anchor.y = 0;
-	spike22.body.setSize(15,32,16,16);
-	var spike23 = spikes.create(873, 682, 'spike');
-	spike23.body.immovable = true;
-	spike23.scale.x = 1.5;
-	spike23.scale.y = 1.5;
-	spike23.anchor.x = 0;
-	spike23.anchor.y = 0;
-	spike23.body.setSize(15,32,16,16);
-	var spike24 = spikes.create(888, 682, 'spike');
-	spike24.body.immovable = true;
-	spike24.scale.x = 1.5;
-	spike24.scale.y = 1.5;
-	spike24.anchor.x = 0;
-	spike24.anchor.y = 0;
-	spike24.body.setSize(15,32,16,16);
-	var spike25 = spikes.create(903, 682, 'spike');
-	spike25.body.immovable = true;
-	spike25.scale.x = 1.5;
-	spike25.scale.y = 1.5;
-	spike25.anchor.x = 0;
-	spike25.anchor.y = 0;
-	spike25.body.setSize(15,32,16,16);
-	var spike26 = spikes.create(918, 682, 'spike');
-	spike26.body.immovable = true;
-	spike26.scale.x = 1.5;
-	spike26.scale.y = 1.5;
-	spike26.anchor.x = 0;
-	spike26.anchor.y = 0;
-	spike26.body.setSize(15,32,16,16);
-	var spike27 = spikes.create(933, 682, 'spike');
-	spike27.body.immovable = true;
-	spike27.scale.x = 1.5;
-	spike27.scale.y = 1.5;
-	spike27.anchor.x = 0;
-	spike27.anchor.y = 0;
-	spike27.body.setSize(15,32,0,16);
-	var spike28 = spikes.create(150, 682, 'spike');
-	spike28.body.immovable = true;
-	spike28.scale.x = 1.5;
-	spike28.scale.y = 1.5;
-	spike28.anchor.x = 0;
-	spike28.anchor.y = 0;
-	spike28.body.setSize(1,32,16,16);
+                    // Add spike
+                    spikes = game.add.group();
+                    // Enable physics for spikes
+                    spikes.enableBody = true;
 
-	// Add firstaid
-	firstaids = game.add.group();
-	// Enable physics for firstaids
-	firstaids.enableBody = true;
+                    var spike1 = spikes.create(543, 682, 'spike');
+                    spike1.body.immovable = true;
+                    spike1.scale.x = 1.5;
+                    spike1.scale.y = 1.5;
+                    spike1.anchor.x = 0;
+                    spike1.anchor.y = 0;
+                    spike1.body.setSize(15, 32, 16, 16);
+                    var spike2 = spikes.create(558, 682, 'spike');
+                    spike2.body.immovable = true;
+                    spike2.scale.x = 1.5;
+                    spike2.scale.y = 1.5;
+                    spike2.anchor.x = 0;
+                    spike2.anchor.y = 0;
+                    spike2.body.setSize(15, 32, 16, 16);
+                    var spike3 = spikes.create(573, 682, 'spike');
+                    spike3.body.immovable = true;
+                    spike3.scale.x = 1.5;
+                    spike3.scale.y = 1.5;
+                    spike3.anchor.x = 0;
+                    spike3.anchor.y = 0;
+                    spike3.body.setSize(15, 32, 16, 16);
+                    var spike4 = spikes.create(588, 682, 'spike');
+                    spike4.body.immovable = true;
+                    spike4.scale.x = 1.5;
+                    spike4.scale.y = 1.5;
+                    spike4.anchor.x = 0;
+                    spike4.anchor.y = 0;
+                    spike4.body.setSize(15, 32, 16, 16);
+                    var spike5 = spikes.create(603, 682, 'spike');
+                    spike5.body.immovable = true;
+                    spike5.scale.x = 1.5;
+                    spike5.scale.y = 1.5;
+                    spike5.anchor.x = 0;
+                    spike5.anchor.y = 0;
+                    spike5.body.setSize(15, 32, 16, 16);
+                    var spike6 = spikes.create(618, 682, 'spike');
+                    spike6.body.immovable = true;
+                    spike6.scale.x = 1.5;
+                    spike6.scale.y = 1.5;
+                    spike6.anchor.x = 0;
+                    spike6.anchor.y = 0;
+                    spike6.body.setSize(15, 32, 16, 16);
+                    var spike7 = spikes.create(633, 682, 'spike');
+                    spike7.body.immovable = true;
+                    spike7.scale.x = 1.5;
+                    spike7.scale.y = 1.5;
+                    spike7.anchor.x = 0;
+                    spike7.anchor.y = 0;
+                    spike7.body.setSize(15, 32, 16, 16);
+                    var spike8 = spikes.create(648, 682, 'spike');
+                    spike8.body.immovable = true;
+                    spike8.scale.x = 1.5;
+                    spike8.scale.y = 1.5;
+                    spike8.anchor.x = 0;
+                    spike8.anchor.y = 0;
+                    spike8.body.setSize(15, 32, 16, 16);
+                    var spike9 = spikes.create(663, 682, 'spike');
+                    spike9.body.immovable = true;
+                    spike9.scale.x = 1.5;
+                    spike9.scale.y = 1.5;
+                    spike9.anchor.x = 0;
+                    spike9.anchor.y = 0;
+                    spike9.body.setSize(15, 32, 16, 16);
+                    var spike10 = spikes.create(678, 682, 'spike');
+                    spike10.body.immovable = true;
+                    spike10.scale.x = 1.5;
+                    spike10.scale.y = 1.5;
+                    spike10.anchor.x = 0;
+                    spike10.anchor.y = 0;
+                    spike10.body.setSize(15, 32, 16, 16);
+                    var spike11 = spikes.create(693, 682, 'spike');
+                    spike11.body.immovable = true;
+                    spike11.scale.x = 1.5;
+                    spike11.scale.y = 1.5;
+                    spike11.anchor.x = 0;
+                    spike11.anchor.y = 0;
+                    spike11.body.setSize(15, 32, 16, 16);
+                    var spike12 = spikes.create(708, 682, 'spike');
+                    spike12.body.immovable = true;
+                    spike12.scale.x = 1.5;
+                    spike12.scale.y = 1.5;
+                    spike12.anchor.x = 0;
+                    spike12.anchor.y = 0;
+                    spike12.body.setSize(15, 32, 16, 16);
+                    var spike13 = spikes.create(723, 682, 'spike');
+                    spike13.body.immovable = true;
+                    spike13.scale.x = 1.5;
+                    spike13.scale.y = 1.5;
+                    spike13.anchor.x = 0;
+                    spike13.anchor.y = 0;
+                    spike13.body.setSize(15, 32, 16, 16);
+                    var spike14 = spikes.create(738, 682, 'spike');
+                    spike14.body.immovable = true;
+                    spike14.scale.x = 1.5;
+                    spike14.scale.y = 1.5;
+                    spike14.anchor.x = 0;
+                    spike14.anchor.y = 0;
+                    spike14.body.setSize(15, 32, 16, 16);
+                    var spike15 = spikes.create(753, 682, 'spike');
+                    spike15.body.immovable = true;
+                    spike15.scale.x = 1.5;
+                    spike15.scale.y = 1.5;
+                    spike15.anchor.x = 0;
+                    spike15.anchor.y = 0;
+                    spike15.body.setSize(15, 32, 16, 16);
+                    var spike16 = spikes.create(768, 682, 'spike');
+                    spike16.body.immovable = true;
+                    spike16.scale.x = 1.5;
+                    spike16.scale.y = 1.5;
+                    spike16.anchor.x = 0;
+                    spike16.anchor.y = 0;
+                    spike16.body.setSize(15, 32, 16, 16);
+                    var spike17 = spikes.create(783, 682, 'spike');
+                    spike17.body.immovable = true;
+                    spike17.scale.x = 1.5;
+                    spike17.scale.y = 1.5;
+                    spike17.anchor.x = 0;
+                    spike17.anchor.y = 0;
+                    spike17.body.setSize(15, 32, 16, 16);
+                    var spike18 = spikes.create(798, 682, 'spike');
+                    spike18.body.immovable = true;
+                    spike18.scale.x = 1.5;
+                    spike18.scale.y = 1.5;
+                    spike18.anchor.x = 0;
+                    spike18.anchor.y = 0;
+                    spike18.body.setSize(15, 32, 16, 16);
+                    var spike19 = spikes.create(813, 682, 'spike');
+                    spike19.body.immovable = true;
+                    spike19.scale.x = 1.5;
+                    spike19.scale.y = 1.5;
+                    spike19.anchor.x = 0;
+                    spike19.anchor.y = 0;
+                    spike19.body.setSize(15, 32, 16, 16);
+                    var spike20 = spikes.create(828, 682, 'spike');
+                    spike20.body.immovable = true;
+                    spike20.scale.x = 1.5;
+                    spike20.scale.y = 1.5;
+                    spike20.anchor.x = 0;
+                    spike20.anchor.y = 0;
+                    spike20.body.setSize(15, 32, 16, 16);
+                    var spike21 = spikes.create(843, 682, 'spike');
+                    spike21.body.immovable = true;
+                    spike21.scale.x = 1.5;
+                    spike21.scale.y = 1.5;
+                    spike21.anchor.x = 0;
+                    spike21.anchor.y = 0;
+                    spike21.body.setSize(15, 32, 16, 16);
+                    var spike22 = spikes.create(858, 682, 'spike');
+                    spike22.body.immovable = true;
+                    spike22.scale.x = 1.5;
+                    spike22.scale.y = 1.5;
+                    spike22.anchor.x = 0;
+                    spike22.anchor.y = 0;
+                    spike22.body.setSize(15, 32, 16, 16);
+                    var spike23 = spikes.create(873, 682, 'spike');
+                    spike23.body.immovable = true;
+                    spike23.scale.x = 1.5;
+                    spike23.scale.y = 1.5;
+                    spike23.anchor.x = 0;
+                    spike23.anchor.y = 0;
+                    spike23.body.setSize(15, 32, 16, 16);
+                    var spike24 = spikes.create(888, 682, 'spike');
+                    spike24.body.immovable = true;
+                    spike24.scale.x = 1.5;
+                    spike24.scale.y = 1.5;
+                    spike24.anchor.x = 0;
+                    spike24.anchor.y = 0;
+                    spike24.body.setSize(15, 32, 16, 16);
+                    var spike25 = spikes.create(903, 682, 'spike');
+                    spike25.body.immovable = true;
+                    spike25.scale.x = 1.5;
+                    spike25.scale.y = 1.5;
+                    spike25.anchor.x = 0;
+                    spike25.anchor.y = 0;
+                    spike25.body.setSize(15, 32, 16, 16);
+                    var spike26 = spikes.create(918, 682, 'spike');
+                    spike26.body.immovable = true;
+                    spike26.scale.x = 1.5;
+                    spike26.scale.y = 1.5;
+                    spike26.anchor.x = 0;
+                    spike26.anchor.y = 0;
+                    spike26.body.setSize(15, 32, 16, 16);
+                    var spike27 = spikes.create(933, 682, 'spike');
+                    spike27.body.immovable = true;
+                    spike27.scale.x = 1.5;
+                    spike27.scale.y = 1.5;
+                    spike27.anchor.x = 0;
+                    spike27.anchor.y = 0;
+                    spike27.body.setSize(15, 32, 0, 16);
+                    var spike28 = spikes.create(150, 682, 'spike');
+                    spike28.body.immovable = true;
+                    spike28.scale.x = 1.5;
+                    spike28.scale.y = 1.5;
+                    spike28.anchor.x = 0;
+                    spike28.anchor.y = 0;
+                    spike28.body.setSize(1, 32, 16, 16);
 
-	var firstaid = firstaids.create(775, 280,'firstaid');
-	firstaid.body.gravity.y = 300;  
+                    // Add firstaid
+                    firstaids = game.add.group();
+                    // Enable physics for firstaids
+                    firstaids.enableBody = true;
 
-	// Player
-	spritePlayer = game.add.sprite(32, game.world.height - 100, 'player');
-	spritePlayer.enableBody;
-  
-	// Enable physics on the player
-  	game.physics.arcade.enable(spritePlayer);
+                    var firstaid = firstaids.create(775, 280, 'firstaid');
+                    firstaid.body.gravity.y = 300;
 
-    // Player physics properties.
-	spritePlayer.body.setSize(29,29,0,0);
-    spritePlayer.body.bounce.y = 0.2;
-    spritePlayer.body.gravity.y = 75;
-    spritePlayer.body.maxVelocity.y = 150;
-    spritePlayer.body.collideWorldBounds = true;
-  
-  	//Our controls.
-    cursors = game.input.keyboard.createCursorKeys();
-  
-	//The score
-    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#f00' });
-    lifeText = game.add.text(16, 64, 'life: 3', { fontSize: '32px', fill: '#f00' });
+                    // Player
+                    spritePlayer = game.add.sprite(32, game.world.height - 100, 'player');
+                    spritePlayer.enableBody;
 
-}
-function update() {
+                    // Enable physics on the player
+                    game.physics.arcade.enable(spritePlayer);
 
-	// colison
-	game.physics.arcade.collide(spritePlayer, layer);
-	game.physics.arcade.collide(gifts, layer);
-	game.physics.arcade.collide(firstaids, layer);
-	game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
-	game.physics.arcade.overlap(spritePlayer, spikes, killPlayer, null, this);
-	game.physics.arcade.overlap(spritePlayer, firstaids, collectFirstaid, null, this);
+                    // Player physics properties.
+                    spritePlayer.body.setSize(29, 29, 0, 0);
+                    spritePlayer.body.bounce.y = 0.2;
+                    spritePlayer.body.gravity.y = 75;
+                    spritePlayer.body.maxVelocity.y = 150;
+                    spritePlayer.body.collideWorldBounds = true;
 
-	// Prevents ball from moving
-	spritePlayer.body.velocity.x = 0;
+                    //Our controls.
+                    cursors = game.input.keyboard.createCursorKeys();
 
-	if(cursors.right.isDown)
-	{
-        spritePlayer.body.velocity.x = 150;
+                    //The score
+                    scoreText = game.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#f00'});
+                    lifeText = game.add.text(16, 64, 'life: 3', {fontSize: '32px', fill: '#f00'});
 
-	}
-	//checks for left arrow key
-	else if(cursors.left.isDown)
-	{
-        spritePlayer.body.velocity.x = -150;
-	}
+                }
+                function update() {
 
-	if (cursors.up.isDown && spritePlayer.body.onFloor() )
-    {
-        music = game.add.audio('jump');
-		music.play();
-        spritePlayer.body.velocity.y = -350;
-    }
+                    // colison
+                    game.physics.arcade.collide(spritePlayer, layer);
+                    game.physics.arcade.collide(gifts, layer);
+                    game.physics.arcade.collide(firstaids, layer);
+                    game.physics.arcade.overlap(spritePlayer, gifts, collectGift, null, this);
+                    game.physics.arcade.overlap(spritePlayer, spikes, killPlayer, null, this);
+                    game.physics.arcade.overlap(spritePlayer, firstaids, collectFirstaid, null, this);
 
-	if(life == 0)
-	{
-		lose = game.add.sprite(450, 250, 'lose');
-		life-=1;
-		spritePlayer.kill();
-	}
+                    // Prevents ball from moving
+                    spritePlayer.body.velocity.x = 0;
 
-	if(score == 100)
-	{
-		lose = game.add.sprite(390, 250, 'win');
-		score +=1;
-		spritePlayer.kill();
-	}
+                    if (cursors.right.isDown)
+                    {
+                        spritePlayer.body.velocity.x = 150;
 
-}
+                    }
+                    //checks for left arrow key
+                    else if (cursors.left.isDown)
+                    {
+                        spritePlayer.body.velocity.x = -150;
+                    }
 
-function collectGift (spritePlayer, spriteGift)
-{
-	spriteGift.kill();
-	score +=10;
-	scoreText.text = 'Score: ' + score;
-	music = game.add.audio('hoho');
-	music.play();
-}
+                    if (cursors.up.isDown && spritePlayer.body.onFloor())
+                    {
+                        music = game.add.audio('jump');
+                        music.play();
+                        spritePlayer.body.velocity.y = -350;
+                    }
 
-function killPlayer (spritePlayer,spike)
-{
-	spritePlayer.kill();
-	music = game.add.audio('death');
-	music.play();
-	life -=1;
-	lifeText.text = 'Life: ' + life;
-	spritePlayer.reset(32, game.world.height - 100);
-}
+                    if (life == 0)
+                    {
+                        lose = game.add.sprite(450, 250, 'lose');
+                        life -= 1;
+                        spritePlayer.kill();
+                    }
 
-function collectFirstaid (spritePlayer,firstaid)
-{
-	firstaid.kill();
-	music = game.add.audio('hoho');
-	music.play();
-	life +=1;
-	lifeText.text = 'Life: ' + life;
-}
+                    if (score == 100)
+                    {
+                        lose = game.add.sprite(390, 250, 'win');
+                        score += 1;
+                        spritePlayer.kill();
+                    }
 
-</script>
+                }
 
-</body>
+                function collectGift(spritePlayer, spriteGift)
+                {
+                    spriteGift.kill();
+                    score += 10;
+                    scoreText.text = 'Score: ' + score;
+                    music = game.add.audio('hoho');
+                    music.play();
+                }
+
+                function killPlayer(spritePlayer, spike)
+                {
+                    spritePlayer.kill();
+                    music = game.add.audio('death');
+                    music.play();
+                    life -= 1;
+                    lifeText.text = 'Life: ' + life;
+                    spritePlayer.reset(32, game.world.height - 100);
+                }
+
+                function collectFirstaid(spritePlayer, firstaid)
+                {
+                    firstaid.kill();
+                    music = game.add.audio('hoho');
+                    music.play();
+                    life += 1;
+                    lifeText.text = 'Life: ' + life;
+                }
+
+            </script>
+						<div class="col-lg-7"><p></p></div>
+					</div>
+				</div>
+
+        <script type="text/javascript" src="js/bootstrap.js"></script>
+    </body>
 </html>
