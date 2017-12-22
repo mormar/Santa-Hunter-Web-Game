@@ -13,7 +13,7 @@
                         font-family: Fantasy;
                         font-weight: bold;
                         font-size: 40px;
-                        margin: 0;
+                        margin: 5px;
                         text-align: center;
                         color: red;
                 }
@@ -35,9 +35,7 @@
 
                 var game = new Phaser.Game(1020, 765, Phaser.AUTO, 'phaser', {preload: preload,
                     create: create, update: update});
-								this.game.scale.pageAlignHorizontally = true;
-								this.game.scale.pageAlignVertically = true;
-								this.game.scale.refresh();
+								
                 function preload() {
                     game.load.image('background', 'assets/ForestNight.png');
                     game.load.image('blockOfGround', 'assets/surface8.png');
@@ -55,7 +53,6 @@
 
                     game.load.tilemap('tilemap', 'assets/level1.json', null, Phaser.Tilemap.TILED_JSON);
                     game.load.image('tiles', 'assets/tile1.png');
-
                 }
 //Global vars
                 var cursors;
@@ -78,9 +75,9 @@
 
                 function create() {
                     // Add music
-                    //music = game.add.audio('music');
-                    //music.loop = true;
-                    //music.play();
+                    music = game.add.audio('music');
+                    music.loop = true;
+                    music.play();
 
                     // Add physics Arcade Physics system
                     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -385,14 +382,12 @@
                     if (cursors.right.isDown)
                     {
                         spritePlayer.body.velocity.x = 150;
-
                     }
                     //checks for left arrow key
                     else if (cursors.left.isDown)
                     {
                         spritePlayer.body.velocity.x = -150;
                     }
-
                     if (cursors.up.isDown && spritePlayer.body.onFloor())
                     {
                         music = game.add.audio('jump');
