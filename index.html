@@ -20,7 +20,7 @@
                 .game{
                         align-self: center;
                 }
-								
+
         </style>
         <link rel="stylesheet" href="css/bootstrap.css">
     </head>
@@ -29,13 +29,14 @@
         <h3 class="text">Santa Hunter</h3>
 	<div class="container">
 		<div class="row">
-				<div class="col-lg-1"><p></p></div>
-      	<div class="col-lg-4" id="phaser"></div>
+      <div class="col-md-1"><p></p></div>
+      <div class="table-responsive" class="col-md-8" id="phaser"></div>
+      <div class="col-md-1"><p></p></div>
             <script type="text/javascript">
 
                 var game = new Phaser.Game(1020, 765, Phaser.AUTO, 'phaser', {preload: preload,
                     create: create, update: update});
-								
+
                 function preload() {
                     game.load.image('background', 'assets/ForestNight.png');
                     game.load.image('blockOfGround', 'assets/surface8.png');
@@ -440,7 +441,6 @@
                 }
 
             </script>
-						<div class="col-lg-7"><p></p></div>
 					</div>
 				</div>
 
