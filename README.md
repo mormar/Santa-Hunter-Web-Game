@@ -18,7 +18,7 @@ After this project we've learnd how to use phaser to make game that obvious. We 
 - Piskel to create custom sprites
 - Tiled to create tilemap
 
-## Link for game
+## Link to game
 https://markar.itch.io/santa-hunter
 
 ## Sources
