@@ -5,33 +5,10 @@
         <title>Santa Hunter</title>
         <!-- include phaser lib -->
         <script type="text/javascript" src="phaser.min.js"></script>
-        <style type="text/css">
-                body{
-                     /*   background-color: #B0C4DE;
-                }
-                .text{
-                        font-family: Fantasy;
-                        font-weight: bold;
-                        font-size: 40px;
-                        margin: 5px;
-                        text-align: center;
-                        color: red;
-                }
-                .game{
-                        align-self: center;*/
-                }
 
-        </style>
-        <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
     </head>
     <body>
-<!--
-        <h3 class="text">Santa Hunter</h3>
-	<div class="container">
-		<div class="row">
-      <div class="col-md-1"><p></p></div>
-      <div class="table-responsive" class="col-md-8" id="phaser"></div>
-      <div class="col-md-1"><p></p></div> -->
+
             <script type="text/javascript">
 
                 var game = new Phaser.Game(1020, 765, Phaser.AUTO, 'phaser', {preload: preload,
@@ -53,6 +30,9 @@
 
                     game.load.tilemap('tilemap', 'assets/level1.json', null, Phaser.Tilemap.TILED_JSON);
                     game.load.image('tiles', 'assets/tile1.png');
+
+                    game.load.image('mute','assets/Santa-Hunter Mute Button.png');
+                    game.load.image('replay','assets/Santa-Hunter Replay Button.png');
                 }
 //Global vars
                 var cursors;
@@ -72,6 +52,8 @@
                 var player;
                 var lose;
                 var firstaid;
+                var muteButton;
+                var replayButton;
 
                 function create() {
                     // Add music
@@ -88,6 +70,15 @@
                     // Scale sprite background
                     spriteBackground.scale.x = 0.55;
                     spriteBackground.scale.y = 0.72;
+
+                    // Stop music
+                    muteButton = game.add.sprite(200,12,'mute');
+                    muteButton.inputEnabled = true;
+                    muteButton.events.onInputDown.add(muteMusic, this);
+                    // game.input.onDown.add(muteMusic, this);
+
+                    // Replay game
+                    replayButton = game.add.sprite(300,12,'replay');
 
                     // Add map
                     map = game.add.tilemap('tilemap');
@@ -437,6 +428,10 @@
                     music.play();
                     life += 1;
                     lifeText.text = 'Life: ' + life;
+                }
+
+                function muteMusic (){
+                     music.destroy();
                 }
 
             </script>
