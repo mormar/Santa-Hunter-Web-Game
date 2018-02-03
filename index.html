@@ -56,6 +56,7 @@
                 var replayButton;
                 var sound;
                 var isMusic;
+                var islose;
 
                 function create() {
                     // Add music
@@ -392,6 +393,7 @@
                         lose = game.add.sprite(450, 250, 'lose');
                         life -= 1;
                         spritePlayer.kill();
+                        islose = 1;
                     }
 
                     if (score == 100)
@@ -399,6 +401,7 @@
                         lose = game.add.sprite(390, 250, 'win');
                         score += 1;
                         spritePlayer.kill();
+                        islose = 1;
                     }
 
                 }
@@ -455,7 +458,16 @@
                     spritePlayer.kill();
                     gifts.destroy();
                     firstaids.destroy();
-                    lose.destroy();
+
+                    if(islose == 1)
+                    {
+                      lose.destroy();
+                    }
+                    else
+                    {
+                      islose = 1;
+                      lose = game.add.sprite(3900, 2500, '');
+                    }
 
                     // Player
                     spritePlayer.reset(32, game.world.height - 100);
