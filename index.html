@@ -34,7 +34,7 @@
                     game.load.image('mute','assets/Santa-Hunter Mute Button.png');
                     game.load.image('replay','assets/Santa-Hunter Replay Button.png');
                 }
-//Global vars
+                //Global vars
                 var cursors;
                 var spritePlayer;
                 var jumpButton;
@@ -78,7 +78,7 @@
                     muteButton = game.add.button( 200, 12, 'mute', actionOnClick, this);
 
                     // Replay game
-                    replayButton = game.add.sprite(300,12,'replay');
+                    replayButton = game.add.button( 300, 12, 'replay', replayGame, this);
 
                     // Add map
                     map = game.add.tilemap('tilemap');
@@ -114,6 +114,7 @@
                     var spriteGift9 = gifts.create(671, 500, 'gift');
                     spriteGift9.body.gravity.y = 300;
 
+                    // gift on ground
                     spriteGift.body.setSize(28.5, 28.5, 0, 0);
                     spriteGift1.body.setSize(28.5, 28.5, 0, 0);
                     spriteGift2.body.setSize(28.5, 28.5, 0, 0);
@@ -353,8 +354,8 @@
                     cursors = game.input.keyboard.createCursorKeys();
 
                     //The score
-                    scoreText = game.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#f00'});
-                    lifeText = game.add.text(16, 64, 'life: 3', {fontSize: '32px', fill: '#f00'});
+                    scoreText = game.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#f00'});
+                    lifeText = game.add.text(16, 64, 'Life: 3', {fontSize: '32px', fill: '#f00'});
 
                 }
                 function update() {
@@ -432,16 +433,89 @@
 
                 function actionOnClick()
                 {
-                      if(isMusic == 1)
-                      {
-                        music.volume = 0;
-                        isMusic = 0;
-                      }
-                      else
-                      {
-                        music.volume = 1;
-                        isMusic = 1;
-                      }
+                    if(isMusic == 1)
+                    {
+                      music.volume = 0;
+                      isMusic = 0;
+                    }
+                    else
+                    {
+                      music.volume = 1;
+                      isMusic = 1;
+                    }
+                }
+
+                function replayGame()
+                {
+                    score = 0;
+                    scoreText.text = 'Score: ' + score;
+                    life = 3;
+                    lifeText.text = 'Life: ' + life;
+
+                    spritePlayer.kill();
+                    gifts.destroy();
+                    firstaids.destroy();
+
+                    // Player
+                    spritePlayer.reset(32, game.world.height - 100);
+                    spritePlayer.enableBody;
+                    //
+                    // Enable physics on the player
+                    game.physics.arcade.enable(spritePlayer);
+
+                    // Player physics properties.
+                    spritePlayer.body.setSize(29, 29, 0, 0);
+                    spritePlayer.body.bounce.y = 0.2;
+                    spritePlayer.body.gravity.y = 75;
+                    spritePlayer.body.maxVelocity.y = 150;
+                    spritePlayer.body.collideWorldBounds = true;
+
+                    // Add gift for collect
+                    gifts = game.add.group();
+                    // Enable physics for gifts
+                    gifts.enableBody = true;
+
+                    var spriteGift = gifts.create(100, 500, 'gift');
+                    spriteGift.body.gravity.y = 300;
+                    var spriteGift1 = gifts.create(470, 650, 'gift');
+                    spriteGift1.body.gravity.y = 300;
+                    var spriteGift2 = gifts.create(160, 100, 'gift');
+                    spriteGift2.body.gravity.y = 300;
+                    var spriteGift3 = gifts.create(10, 100, 'gift');
+                    spriteGift3.body.gravity.y = 300;
+                    var spriteGift4 = gifts.create(970, 50, 'gift');
+                    spriteGift4.body.gravity.y = 300;
+                    var spriteGift5 = gifts.create(990, 500, 'gift');
+                    spriteGift5.body.gravity.y = 300;
+                    var spriteGift6 = gifts.create(468, 100, 'gift');
+                    spriteGift6.body.gravity.y = 300;
+                    var spriteGift7 = gifts.create(775, 100, 'gift');
+                    spriteGift7.body.gravity.y = 300;
+                    var spriteGift8 = gifts.create(900, 300, 'gift');
+                    spriteGift8.body.gravity.y = 300;
+                    var spriteGift9 = gifts.create(671, 500, 'gift');
+                    spriteGift9.body.gravity.y = 300;
+
+                    // gift on ground
+                    spriteGift.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift1.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift2.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift3.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift4.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift5.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift6.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift7.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift8.body.setSize(28.5, 28.5, 0, 0);
+                    spriteGift9.body.setSize(28.5, 28.5, 0, 0);
+
+                    // Add firstaid
+                    firstaids = game.add.group();
+                    // Enable physics for firstaids
+                    firstaids.enableBody = true;
+
+                    var firstaid = firstaids.create(775, 280, 'firstaid');
+                    firstaid.body.gravity.y = 300;
+
                 }
 
             </script>
